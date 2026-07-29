@@ -338,7 +338,7 @@ textarea:focus-visible {
   gap: 12px;
 }
 
-.session-preview {
+.hero-terminal {
   background: #0d1117;
   border: 1px solid #30363d;
   border-radius: 10px;
@@ -349,89 +349,58 @@ textarea:focus-visible {
   transform: perspective(900px) rotateY(-3deg) rotateX(1deg);
 }
 
-.session-preview-header {
+.terminal-top {
   align-items: center;
   background: #161b22;
   border-bottom: 1px solid #30363d;
-  color: #f0f6fc;
-  display: flex;
-  gap: 12px;
-  padding: 15px 17px;
-}
-
-.session-preview-header > div {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.session-preview-header strong {
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 12px;
-}
-
-.session-preview-header small {
   color: #8b949e;
-  font-size: 10px;
-}
-
-.session-preview-icon {
-  align-items: center;
-  background: #30363d;
-  border-radius: 6px;
-  color: #7ee787;
-  display: inline-flex;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 9px;
-  height: 30px;
-  justify-content: center;
-  width: 34px;
-}
-
-.session-preview-badge,
-.session-public-badge {
-  background: rgba(46, 160, 67, 0.12);
-  border: 1px solid rgba(126, 231, 135, 0.35);
-  border-radius: 999px;
-  color: #7ee787;
-  font-size: 10px;
-  margin-left: auto;
-  padding: 3px 8px;
-}
-
-.session-preview-body {
-  color: #c9d1d9;
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  gap: 7px;
+  padding: 12px 14px;
+}
+
+.terminal-top > span:last-child {
+  margin-left: 6px;
+}
+
+.terminal-dot {
+  border-radius: 50%;
+  display: inline-block;
+  height: 9px;
+  width: 9px;
+}
+
+.terminal-dot.red {
+  background: #ff7b72;
+}
+
+.terminal-dot.yellow {
+  background: #d29922;
+}
+
+.terminal-dot.green {
+  background: #3fb950;
+}
+
+.terminal-body {
+  color: #c9d1d9;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 13px;
   min-height: 330px;
-  padding: 26px;
+  padding: 28px;
 }
 
-.session-command {
-  align-items: center;
-  display: flex;
-  gap: 12px;
+.terminal-body p {
+  margin: 0 0 20px;
 }
 
-.session-command > span {
-  border: 1px solid #30363d;
-  border-radius: 999px;
-  color: #8b949e;
-  flex: 0 0 auto;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 9px;
-  padding: 2px 6px;
+.terminal-body p > span {
+  color: #7ee787;
 }
 
-.session-command code {
-  color: #c9d1d9;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-
-.session-result {
+.terminal-result {
   background: #161b22;
   border: 1px solid #30363d;
   border-left: 3px solid #58a6ff;
@@ -439,45 +408,36 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 7px;
+  margin: 8px 0 26px;
   padding: 16px 18px;
 }
 
-.session-result > div {
-  align-items: center;
-  display: flex;
-  gap: 10px;
-}
-
-.session-result strong {
+.terminal-result strong {
   color: #58a6ff;
-  font-size: 14px;
 }
 
-.session-result p,
-.session-result small {
+.terminal-result span,
+.terminal-result small {
   color: #8b949e;
-  margin: 0;
 }
 
-.session-result p {
-  font-size: 12px;
-}
-
-.session-result small {
-  font-size: 10px;
-}
-
-.session-public-badge {
-  margin-left: auto;
-}
-
-.session-success {
-  align-items: center;
+.success-line {
   color: #7ee787;
-  display: flex;
-  font-size: 12px;
-  gap: 8px;
-  margin: 0 0 0 36px;
+}
+
+.cursor-line i {
+  animation: blink 1s steps(2) infinite;
+  background: #8b949e;
+  display: inline-block;
+  height: 15px;
+  vertical-align: -2px;
+  width: 7px;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }
 
 .section-container,
@@ -1715,64 +1675,26 @@ textarea {
 }
 
 .auth-page {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 460px;
-  margin: 0 auto;
-  max-width: 1100px;
-  min-height: calc(100vh - 64px);
-  padding: 80px 32px;
-}
-
-.auth-intro {
-  align-self: center;
-  max-width: 540px;
-  padding-right: 72px;
-}
-
-.auth-brand {
-  color: var(--text);
-  margin-bottom: 54px;
-}
-
-.auth-intro h1 {
-  font-size: 46px;
-  letter-spacing: -0.05em;
-  line-height: 1.1;
-  margin: 0 0 20px;
-}
-
-.auth-intro > p {
-  color: var(--text-muted);
-  line-height: 1.8;
-}
-
-.auth-benefits {
+  align-items: flex-start;
   display: flex;
-  flex-direction: column;
-  font-size: 13px;
-  gap: 12px;
-  list-style: none;
-  margin-top: 30px;
-  padding: 0;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 560px;
+  min-height: calc(100vh - 64px);
+  padding: 72px 24px;
 }
 
 .auth-card {
-  align-self: center;
-  padding: 28px;
+  padding: 30px;
+  width: 100%;
 }
 
 .auth-card-heading {
   margin-bottom: 22px;
 }
 
-.auth-card-heading h2 {
-  font-size: 22px;
-  margin: 5px 0 6px;
-}
-
-.auth-card-heading p {
-  color: var(--text-muted);
-  font-size: 13px;
+.auth-card-heading h1 {
+  font-size: 24px;
   margin: 0;
 }
 
@@ -1804,6 +1726,10 @@ textarea {
     border-color 0.15s ease,
     transform 0.15s ease;
   width: 100%;
+}
+
+.provider-button {
+  grid-template-columns: 32px minmax(0, 1fr);
 }
 
 .provider-button:hover,
@@ -1844,12 +1770,6 @@ textarea {
   font-size: 11px;
 }
 
-.provider-arrow {
-  color: var(--text-subtle);
-  font-size: 17px;
-  text-align: right;
-}
-
 .auth-divider {
   align-items: center;
   color: var(--text-subtle);
@@ -1857,6 +1777,10 @@ textarea {
   font-size: 11px;
   gap: 12px;
   margin: 20px 0;
+}
+
+.auth-divider span {
+  white-space: nowrap;
 }
 
 .auth-divider::before,
@@ -1891,13 +1815,6 @@ textarea {
 
 .email-auth-panel .segmented-control {
   margin-bottom: 18px;
-}
-
-.auth-privacy-note {
-  color: var(--text-subtle);
-  font-size: 10px;
-  line-height: 1.6;
-  margin: 18px 0 0;
 }
 
 .segmented-control button {
@@ -2201,7 +2118,7 @@ textarea {
     padding: 64px 24px 72px;
   }
 
-  .session-preview {
+  .hero-terminal {
     transform: none;
   }
 
@@ -2266,20 +2183,7 @@ textarea {
   }
 
   .auth-page {
-    grid-template-columns: 1fr;
     padding-top: 48px;
-  }
-
-  .auth-intro {
-    padding: 0;
-  }
-
-  .auth-brand {
-    margin-bottom: 34px;
-  }
-
-  .auth-card {
-    margin-top: 36px;
   }
 }
 
@@ -2384,13 +2288,9 @@ textarea {
     grid-column: 2;
   }
 
-  .session-preview-body {
-    min-height: 300px;
-    padding: 18px;
-  }
-
-  .session-command code {
+  .terminal-body {
     font-size: 11px;
+    padding: 20px;
   }
 
   .concept-illustration {

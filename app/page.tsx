@@ -40,37 +40,28 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="session-preview">
-              <div className="session-preview-header">
-                <span className="session-preview-icon" aria-hidden="true">
-                  {"</>"}
-                </span>
-                <div>
-                  <strong>learning/session</strong>
-                  <small>Public Repository</small>
-                </div>
-                <span className="session-preview-badge">Ready</span>
+            <div className="hero-terminal">
+              <div className="terminal-top">
+                <span className="terminal-dot red" />
+                <span className="terminal-dot yellow" />
+                <span className="terminal-dot green" />
+                <span>learning/session</span>
               </div>
-              <div className="session-preview-body">
-                <div className="session-command">
-                  <span>01</span>
-                  <code>hunger explore --tech typescript</code>
-                </div>
-                <div className="session-result">
-                  <div>
-                    <strong>Study Streak</strong>
-                    <span className="session-public-badge">Public</span>
-                  </div>
-                  <p>Next.js · Supabase · Tailwind CSS</p>
+              <div className="terminal-body">
+                <p>
+                  <span>$</span> hunger explore --tech typescript
+                </p>
+                <div className="terminal-result">
+                  <strong>Study Streak</strong>
+                  <span>Next.js · Supabase · Tailwind</span>
                   <small>危険度 D · 18 beyonds</small>
                 </div>
-                <div className="session-command">
-                  <span>02</span>
-                  <code>hunger beyond study-streak</code>
-                </div>
-                <p className="session-success">
-                  <span aria-hidden="true">✓</span>
-                  Repositoryを開きました
+                <p>
+                  <span>$</span> hunger beyond study-streak
+                </p>
+                <p className="success-line">✓ Repositoryを開きました</p>
+                <p className="cursor-line">
+                  <span>$</span> <i />
                 </p>
               </div>
             </div>
@@ -93,7 +84,7 @@ export default async function Home() {
                   <Image
                     alt="未完成のコードと設計を整理して残すイラスト"
                     height={724}
-                    src="/concept-flow.png"
+                    src="/concept-flow-simple-v2.png"
                     width={2172}
                   />
                 </div>
@@ -106,7 +97,7 @@ export default async function Home() {
                   <Image
                     alt="公開Repositoryを自分の開発環境へつなぐイラスト"
                     height={724}
-                    src="/concept-flow.png"
+                    src="/concept-flow-simple-v2.png"
                     width={2172}
                   />
                 </div>
@@ -119,7 +110,7 @@ export default async function Home() {
                   <Image
                     alt="追加開発した成果を共有Projectへ投稿するイラスト"
                     height={724}
-                    src="/concept-flow.png"
+                    src="/concept-flow-simple-v2.png"
                     width={2172}
                   />
                 </div>

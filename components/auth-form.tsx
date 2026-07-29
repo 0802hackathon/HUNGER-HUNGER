@@ -99,9 +99,7 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
   return (
     <div className="auth-card">
       <div className="auth-card-heading">
-        <span className="eyebrow">SIGN IN</span>
-        <h2>アカウントでログイン</h2>
-        <p>利用するアカウントを選択してください。</p>
+        <h1>ログイン</h1>
       </div>
 
       <div className="provider-list">
@@ -118,9 +116,6 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
             </span>
             <span>
               {pending === provider.id ? "接続中…" : provider.label}
-            </span>
-            <span className="provider-arrow" aria-hidden="true">
-              →
             </span>
           </button>
         ))}
@@ -220,11 +215,6 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
           {message}
         </p>
       )}
-
-      <p className="auth-privacy-note">
-        続行すると、各認証Providerから共有される基本プロフィール情報を
-        HUNGER×HUNGERのアカウント作成に使用します。
-      </p>
     </div>
   );
 }

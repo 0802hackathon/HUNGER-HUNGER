@@ -42,7 +42,9 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.match(html, /シュート/);
   assert.match(html, /hunger explore --tech typescript/);
   assert.match(html, /Repositoryを開きました/);
-  assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし|terminal-dot/);
+  assert.match(html, /terminal-dot red/);
+  assert.match(html, /concept-flow-simple-v2\.png/);
+  assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし/);
   assert.doesNotMatch(html, /codex-preview|Starter Project/i);
 });
 
@@ -120,4 +122,6 @@ test("ログイン画面が4つの認証方法を表示する", async () => {
   assert.match(html, /Googleでログイン/);
   assert.match(html, /Appleアカウントでログイン/);
   assert.match(html, /その他メールアドレスでログイン/);
+  assert.doesNotMatch(html, /CONTINUE THE UNFINISHED|ビヨンド履歴を残す/);
+  assert.doesNotMatch(html, /各認証Providerから共有される基本プロフィール情報/);
 });
