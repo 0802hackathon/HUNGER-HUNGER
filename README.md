@@ -45,8 +45,56 @@ Service Role Keyは使用せず、ブラウザとRoute Handlerの双方をRLSで
 1. Supabaseで新しいProjectを作成します。
 2. SQL EditorまたはSupabase CLIで `supabase/migrations/202607290001_initial_schema.sql` を適用します。
 3. AuthenticationのEmail providerを有効化します。
-4. 開発環境のSite URLとRedirect URLに `http://localhost:3000/**` を追加します。
-5. `.env.local` にProject URLとPublishable Keyを設定します。
+4. Authentication → URL ConfigurationでSite URLを設定します。
+5. Redirect URLに次を追加します。
+
+```text
+http://localhost:3000/auth/callback
+https://hunger-hunger-mvp.shuta-akiyoshi.chatgpt.site/auth/callback
+```
+
+6. `.env.local` にProject URLとPublishable Keyを設定します。
+
+### ログインProvider
+
+ログイン画面は次の4方式に対応しています。
+
+- GitHubアカウント
+- Google
+- Appleアカウント
+- メールアドレスとパスワード
+
+OAuth Providerを利用するには、Supabase DashboardのAuthentication → Sign In
+/ Providersで各Providerを有効化します。外部Providerへ登録するCallback URLは、
+Supabase Dashboardに表示される次の形式のURLです。
+
+```text
+https://<project-ref>.supabase.co/auth/v1/callback
+```
+
+#### GitHub
+
+1. GitHub Developer SettingsでOAuth Appを作成します。
+2. Homepage URLに本番サイトURLを設定します。
+3. Authorization callback URLにSupabaseのCallback URLを設定します。
+4. Client IDとClient SecretをSupabaseのGitHub Providerへ登録します。
+
+#### Google
+
+1. Google Auth PlatformでWeb applicationのOAuth Clientを作成します。
+2. Authorized JavaScript originsにローカルURLと本番サイトURLを追加します。
+3. Authorized redirect URIsにSupabaseのCallback URLを設定します。
+4. Client IDとClient SecretをSupabaseのGoogle Providerへ登録します。
+
+#### Apple
+
+1. Apple DeveloperでSign in with Apple対応のApp IDとServices IDを作成します。
+2. Services IDのWebsite URLにSupabase ProjectのDomain、Return URLにSupabaseのCallback URLを設定します。
+3. Team ID、Services ID、Signing Keyから作成したSecretをSupabaseのApple Providerへ登録します。
+4. Apple OAuthのSecretは6か月ごとのローテーションが必要です。
+
+現在のSitesデプロイは所有者限定です。外部ユーザーにこれらのログイン方法を提供する場合は、
+Sitesのアクセス設定をPublicへ変更する必要があります。
 
 Migrationは次を作成します。
 

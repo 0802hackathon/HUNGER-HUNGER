@@ -1503,7 +1503,7 @@ textarea {
 
 .auth-page {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(0, 1fr) 460px;
   margin: 0 auto;
   max-width: 1100px;
   min-height: calc(100vh - 64px);
@@ -1548,6 +1548,124 @@ textarea {
   padding: 28px;
 }
 
+.auth-card-heading {
+  margin-bottom: 22px;
+}
+
+.auth-card-heading h2 {
+  font-size: 22px;
+  margin: 5px 0 6px;
+}
+
+.auth-card-heading p {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.provider-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.provider-button,
+.email-login-toggle {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text);
+  cursor: pointer;
+  display: grid;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 12px;
+  grid-template-columns: 32px minmax(0, 1fr) 20px;
+  min-height: 50px;
+  padding: 8px 13px;
+  text-align: left;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+  width: 100%;
+}
+
+.provider-button:hover,
+.email-login-toggle:hover {
+  background: var(--surface-muted);
+  border-color: #8c959f;
+  transform: translateY(-1px);
+}
+
+.provider-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+  transform: none;
+}
+
+.provider-mark {
+  align-items: center;
+  background: #0d1117;
+  border-radius: 50%;
+  color: #f0f6fc;
+  display: inline-flex;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 800;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.provider-google .provider-mark {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: #1a73e8;
+  font-size: 15px;
+}
+
+.provider-apple .provider-mark {
+  font-size: 11px;
+}
+
+.provider-arrow {
+  color: var(--text-subtle);
+  font-size: 17px;
+  text-align: right;
+}
+
+.auth-divider {
+  align-items: center;
+  color: var(--text-subtle);
+  display: flex;
+  font-size: 11px;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  background: var(--border);
+  content: "";
+  height: 1px;
+  width: 100%;
+}
+
+.email-mark {
+  background: var(--blue-soft);
+  color: var(--link);
+  font-size: 14px;
+}
+
+.email-auth-panel {
+  border-top: 1px solid var(--border-muted);
+  margin-top: 18px;
+  padding-top: 18px;
+}
+
 .segmented-control {
   background: var(--surface-muted);
   border: 1px solid var(--border);
@@ -1556,6 +1674,17 @@ textarea {
   grid-template-columns: 1fr 1fr;
   margin-bottom: 24px;
   padding: 3px;
+}
+
+.email-auth-panel .segmented-control {
+  margin-bottom: 18px;
+}
+
+.auth-privacy-note {
+  color: var(--text-subtle);
+  font-size: 10px;
+  line-height: 1.6;
+  margin: 18px 0 0;
 }
 
 .segmented-control button {

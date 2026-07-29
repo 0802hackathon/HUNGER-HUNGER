@@ -42,3 +42,17 @@ test("外部URLはHTTPSかつ認証情報なしに限定する", async () => {
   assert.match(validation, /!url\.username && !url\.password/);
   assert.match(validation, /hostname === "github\.com"/);
 });
+
+test("OAuthはPKCE callbackでセッションを交換する", async () => {
+  const [form, callback] = await Promise.all([
+    readFile(new URL("components/auth-form.tsx", root), "utf8"),
+    readFile(new URL("app/auth/callback/route.ts", root), "utf8"),
+  ]);
+
+  assert.match(form, /provider: provider\.id/);
+  assert.match(form, /github/);
+  assert.match(form, /google/);
+  assert.match(form, /apple/);
+  assert.match(callback, /exchangeCodeForSession/);
+  assert.match(callback, /!value\.startsWith\("\/\/"\)/);
+});

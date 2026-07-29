@@ -7,7 +7,19 @@ export const metadata: Metadata = {
   title: "ログイン",
 };
 
-export default function LoginPage() {
+type SearchParams = Promise<{ error?: string }>;
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const { error } = await searchParams;
+  const initialMessage =
+    error === "oauth_callback"
+      ? "ログインを完了できませんでした。ProviderとRedirect URLの設定を確認してください。"
+      : "";
+
   return (
     <>
       <SiteHeader />
@@ -28,7 +40,7 @@ export default function LoginPage() {
             <li>● 追加開発した成果をシュートする</li>
           </ul>
         </div>
-        <AuthForm />
+        <AuthForm initialMessage={initialMessage} />
       </main>
     </>
   );

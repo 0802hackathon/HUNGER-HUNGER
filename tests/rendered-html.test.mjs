@@ -74,3 +74,21 @@ test("未認証の投稿APIを拒否する", async () => {
 
   assert.equal(response.status, 401);
 });
+
+test("ログイン画面が4つの認証方法を表示する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/login", {
+      headers: { accept: "text/html" },
+    }),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /GitHubアカウントでログイン/);
+  assert.match(html, /Googleでログイン/);
+  assert.match(html, /Appleアカウントでログイン/);
+  assert.match(html, /その他メールアドレスでログイン/);
+});

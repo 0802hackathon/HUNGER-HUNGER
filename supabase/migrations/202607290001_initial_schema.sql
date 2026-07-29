@@ -293,10 +293,16 @@ begin
       case
         when char_length(trim(coalesce(
           nullif(new.raw_user_meta_data ->> 'display_name', ''),
+          nullif(new.raw_user_meta_data ->> 'full_name', ''),
+          nullif(new.raw_user_meta_data ->> 'name', ''),
+          nullif(new.raw_user_meta_data ->> 'user_name', ''),
           split_part(coalesce(new.email, 'hunter'), '@', 1)
         ))) < 2 then 'hunter'
         else trim(coalesce(
           nullif(new.raw_user_meta_data ->> 'display_name', ''),
+          nullif(new.raw_user_meta_data ->> 'full_name', ''),
+          nullif(new.raw_user_meta_data ->> 'name', ''),
+          nullif(new.raw_user_meta_data ->> 'user_name', ''),
           split_part(coalesce(new.email, 'hunter'), '@', 1)
         ))
       end,
