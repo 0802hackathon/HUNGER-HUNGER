@@ -1,0 +1,4 @@
+-- Technology values are stored per profile/project in the MVP so the owner can
+-- describe uncommon or emerging tools without waiting for a global taxonomy.
+-- Demo projects live in lib/sample-data.ts and are used only when Supabase
+-- environment variables are absent.

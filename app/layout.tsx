@@ -1,0 +1,63 @@
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+  ),
+  title: {
+    default: "HUNGER×HUNGER — 未完成のコードを、次の学びへ",
+    template: "%s | HUNGER×HUNGER",
+  },
+  description:
+    "開発途中のProjectと、実践的な開発題材を探す学習者をつなぐオープンな学習プラットフォーム。",
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    siteName: "HUNGER×HUNGER",
+    title: "HUNGER×HUNGER — 未完成のコードを、次の学びへ",
+    description:
+      "応募も承認もなく、公開Repositoryから実践的な開発を始めよう。",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "未完成のコードから次の実装へ架かる橋",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HUNGER×HUNGER",
+    description: "未完成のコードを、次の学びへ。",
+    images: ["/og-image.png"],
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="ja">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
