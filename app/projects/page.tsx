@@ -46,7 +46,7 @@ export default async function ProjectsPage({
           <div>
             <span className="eyebrow">EXPLORE</span>
             <h1>Projectを探す</h1>
-            <p>誰かが作り切れなかったコードから、次の学びを見つけます。</p>
+            <p>未完成のコードから、次の学びを見つけましょう。</p>
           </div>
           <Link className="button button-secondary" href="/projects/new">
             ＋ Projectを投稿

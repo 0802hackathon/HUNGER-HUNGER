@@ -40,54 +40,38 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="repository-preview">
-              <div className="repository-preview-header">
-                <span className="repository-preview-mark" aria-hidden="true">
-                  {"<>"}
+            <div className="session-preview">
+              <div className="session-preview-header">
+                <span className="session-preview-icon" aria-hidden="true">
+                  {"</>"}
                 </span>
-                <strong>study-streak</strong>
-                <span className="preview-visibility">Public</span>
-              </div>
-              <div className="repository-preview-tabs" aria-hidden="true">
-                <span className="active">Overview</span>
-                <span>Environment</span>
-                <span>Learning</span>
-              </div>
-              <div className="repository-preview-body">
-                <div className="preview-file-heading">
-                  <div>
-                    <span className="preview-status-dot" />
-                    <strong>project.yml</strong>
-                  </div>
-                  <small>開発環境を確認済み</small>
+                <div>
+                  <strong>learning/session</strong>
+                  <small>Public Repository</small>
                 </div>
-                <dl className="preview-definition-list">
-                  <div>
-                    <dt>status</dt>
-                    <dd>unfinished</dd>
-                  </div>
-                  <div>
-                    <dt>runtime</dt>
-                    <dd>Node.js 22.x</dd>
-                  </div>
-                  <div>
-                    <dt>package manager</dt>
-                    <dd>pnpm 10</dd>
-                  </div>
-                  <div>
-                    <dt>lockfile</dt>
-                    <dd className="preview-ok">committed</dd>
-                  </div>
-                  <div>
-                    <dt>next idea</dt>
-                    <dd>タイムゾーン対応</dd>
-                  </div>
-                </dl>
-                <div className="preview-footer">
-                  <span>Next.js</span>
-                  <span>TypeScript</span>
-                  <strong>ビヨンドできる →</strong>
+                <span className="session-preview-badge">Ready</span>
+              </div>
+              <div className="session-preview-body">
+                <div className="session-command">
+                  <span>01</span>
+                  <code>hunger explore --tech typescript</code>
                 </div>
+                <div className="session-result">
+                  <div>
+                    <strong>Study Streak</strong>
+                    <span className="session-public-badge">Public</span>
+                  </div>
+                  <p>Next.js · Supabase · Tailwind CSS</p>
+                  <small>危険度 D · 18 beyonds</small>
+                </div>
+                <div className="session-command">
+                  <span>02</span>
+                  <code>hunger beyond study-streak</code>
+                </div>
+                <p className="session-success">
+                  <span aria-hidden="true">✓</span>
+                  Repositoryを開きました
+                </p>
               </div>
             </div>
           </div>

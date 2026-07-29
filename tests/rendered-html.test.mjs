@@ -40,7 +40,8 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.match(html, /未完成の構想と、実践的な題材を探すためのプラットフォーム/);
   assert.match(html, /ビヨンド/);
   assert.match(html, /シュート/);
-  assert.match(html, /project\.yml/);
+  assert.match(html, /hunger explore --tech typescript/);
+  assert.match(html, /Repositoryを開きました/);
   assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし|terminal-dot/);
   assert.doesNotMatch(html, /codex-preview|Starter Project/i);
 });
@@ -58,6 +59,7 @@ test("Project一覧が検索UIとデモProjectを表示する", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Projectを探す/);
+  assert.match(html, /未完成のコードから、次の学びを見つけましょう/);
   assert.match(html, /Study Streak/);
   assert.match(html, /使用技術/);
   assert.match(html, /Python/);
