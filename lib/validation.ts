@@ -21,6 +21,36 @@ export const projectInputSchema = z.object({
     (value) => new URL(value).hostname === "github.com",
     "MVPではGitHubの公開Repositoryだけ登録できます",
   ),
+  runtimeRequirements: z.string().trim().min(3).max(300),
+  packageManager: z.string().trim().min(2).max(80),
+  installCommand: z.string().trim().min(2).max(300),
+  lockfileStatus: z.enum([
+    "committed",
+    "missing",
+    "not_applicable",
+    "unknown",
+  ]),
+  setupInstructions: z.string().trim().min(20).max(3000),
+  dependencyNotes: z.string().trim().min(10).max(3000),
+  testedEnvironment: z.string().trim().min(3).max(500),
+  defaultBranch: z
+    .string()
+    .trim()
+    .min(1)
+    .max(100)
+    .regex(/^[A-Za-z0-9._/-]+$/, "Branch名の形式を確認してください"),
+  lastTestedCommit: z
+    .union([
+      z
+        .string()
+        .trim()
+        .regex(
+          /^[0-9a-fA-F]{7,64}$/,
+          "最後に動作確認したCommit SHAを7〜64桁で入力してください",
+        ),
+      z.literal(""),
+    ])
+    .optional(),
   difficulty: z.enum(["beginner", "intermediate", "advanced", "expert"]),
   recommendedSkillLevel: z.enum(["beginner", "intermediate", "advanced"]),
   licenseIdentifier: z.string().trim().min(2).max(80),

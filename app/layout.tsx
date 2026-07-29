@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import "@fontsource-variable/mona-sans";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -28,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "HUNGER×HUNGER",
     title: "HUNGER×HUNGER — 未完成のコードを、次の学びへ",
     description:
-      "応募も承認もなく、公開Repositoryから実践的な開発を始めよう。",
+      "未完成の構想と、実践的な題材を探すためのプラットフォーム。公開されたRepositoryから自由に始められます。",
     images: [
       {
         url: "/og-image.png",
@@ -53,11 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

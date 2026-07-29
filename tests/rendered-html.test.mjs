@@ -37,8 +37,11 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   const html = await response.text();
   assert.match(html, /HUNGER/);
   assert.match(html, /未完成のコードを/);
+  assert.match(html, /未完成の構想と、実践的な題材を探すためのプラットフォーム/);
   assert.match(html, /ビヨンド/);
   assert.match(html, /シュート/);
+  assert.match(html, /project\.yml/);
+  assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし|terminal-dot/);
   assert.doesNotMatch(html, /codex-preview|Starter Project/i);
 });
 
@@ -57,7 +60,31 @@ test("Project一覧が検索UIとデモProjectを表示する", async () => {
   assert.match(html, /Projectを探す/);
   assert.match(html, /Study Streak/);
   assert.match(html, /使用技術/);
+  assert.match(html, /Python/);
+  assert.match(html, /画像処理/);
   assert.match(html, /危険度/);
+});
+
+test("Project詳細が開発環境と依存関係を表示する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/projects/study-streak", {
+      headers: { accept: "text/html" },
+    }),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /開発環境と依存関係/);
+  assert.match(html, /Node\.js 22\.x/);
+  assert.match(html, /pnpm install --frozen-lockfile/);
+  assert.match(html, /RepositoryにCommit済み/);
+  assert.doesNotMatch(
+    html,
+    /応募や承認はありません。自分の環境で開発を始めます/,
+  );
 });
 
 test("未認証の投稿APIを拒否する", async () => {

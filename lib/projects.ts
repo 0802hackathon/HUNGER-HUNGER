@@ -1,5 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { sampleContinuations, sampleProjects } from "./sample-data";
+import {
+  LEARNING_TOPIC_OPTIONS,
+  TECHNOLOGY_OPTIONS,
+} from "./technology-options";
 import type {
   Difficulty,
   Project,
@@ -31,6 +35,10 @@ function matchesFilters(project: Project, filters: ProjectFilters) {
     project.motivation,
     project.currentState,
     project.knownLimitations,
+    project.runtimeRequirements,
+    project.packageManager,
+    project.dependencyNotes,
+    project.testedEnvironment,
     ...project.technologies,
     ...project.learnableTechnologies,
     ...project.implementedFeatures.map((feature) => feature.title),
@@ -69,6 +77,25 @@ function mapProject(row: Record<string, unknown>): Project {
     currentState: String(row.current_state),
     knownLimitations: String(row.known_limitations ?? ""),
     repositoryUrl: String(row.repository_url),
+    runtimeRequirements: String(
+      row.runtime_requirements ?? "RepositoryのREADMEを確認",
+    ),
+    packageManager: String(row.package_manager ?? "未確認"),
+    installCommand: String(row.install_command ?? "RepositoryのREADMEを確認"),
+    lockfileStatus:
+      (row.lockfile_status as Project["lockfileStatus"]) ?? "unknown",
+    setupInstructions: String(
+      row.setup_instructions ?? "RepositoryのREADMEを確認してください。",
+    ),
+    dependencyNotes: String(
+      row.dependency_notes ??
+        "依存関係を更新する前に、既存のLockfileとREADMEを確認してください。",
+    ),
+    testedEnvironment: String(row.tested_environment ?? "未確認"),
+    defaultBranch: String(row.default_branch ?? "main"),
+    lastTestedCommit: row.last_tested_commit
+      ? String(row.last_tested_commit)
+      : undefined,
     status: row.status as Project["status"],
     difficulty: row.difficulty as Difficulty,
     recommendedSkillLevel:
@@ -181,11 +208,19 @@ export async function getProjectContinuations(
 }
 
 export function getTechnologyOptions(projects: Project[]) {
-  return Array.from(new Set(projects.flatMap((item) => item.technologies))).sort();
+  return Array.from(
+    new Set([
+      ...TECHNOLOGY_OPTIONS,
+      ...projects.flatMap((item) => item.technologies),
+    ]),
+  );
 }
 
 export function getLearningTechnologyOptions(projects: Project[]) {
   return Array.from(
-    new Set(projects.flatMap((item) => item.learnableTechnologies)),
-  ).sort();
+    new Set([
+      ...LEARNING_TOPIC_OPTIONS,
+      ...projects.flatMap((item) => item.learnableTechnologies),
+    ]),
+  );
 }

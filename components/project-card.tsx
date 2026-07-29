@@ -1,4 +1,8 @@
 import Link from "next/link";
+import {
+  getPrimaryLanguage,
+  getTechnologyColor,
+} from "@/lib/technology-options";
 import type { Difficulty, Project } from "@/lib/types";
 
 const difficultyLabel: Record<Difficulty, string> = {
@@ -17,6 +21,8 @@ function formatDate(value: string) {
 }
 
 export function ProjectCard({ project }: { project: Project }) {
+  const primaryLanguage = getPrimaryLanguage(project.technologies);
+
   return (
     <article className="repo-card">
       <div className="repo-card-main">
@@ -44,8 +50,14 @@ export function ProjectCard({ project }: { project: Project }) {
 
         <div className="repo-meta">
           <span>
-            <i className="language-dot" aria-hidden="true" />{" "}
-            {project.technologies[0]}
+            <i
+              className="language-dot"
+              aria-hidden="true"
+              style={{
+                backgroundColor: getTechnologyColor(primaryLanguage),
+              }}
+            />{" "}
+            {primaryLanguage}
           </span>
           <span>↗ {project.beyondCount} ビヨンド</span>
           <span>● {project.continuationCount} シュート</span>

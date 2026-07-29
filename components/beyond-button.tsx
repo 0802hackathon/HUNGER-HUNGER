@@ -54,9 +54,6 @@ export function BeyondButton({
       >
         <span aria-hidden="true">↗</span> ビヨンドする
       </button>
-      <span className="action-caption">
-        応募や承認はありません。自分の環境で開発を始めます。
-      </span>
       {message && (
         <p className="inline-message" role="status">
           {message}

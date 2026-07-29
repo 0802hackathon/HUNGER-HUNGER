@@ -81,6 +81,34 @@ create table public.projects (
   repository_url text not null check (
     repository_url ~ '^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/?$'
   ),
+  runtime_requirements text not null check (
+    char_length(runtime_requirements) between 3 and 300
+  ),
+  package_manager text not null check (
+    char_length(package_manager) between 2 and 80
+  ),
+  install_command text not null check (
+    char_length(install_command) between 2 and 300
+  ),
+  lockfile_status text not null check (
+    lockfile_status in ('committed', 'missing', 'not_applicable', 'unknown')
+  ),
+  setup_instructions text not null check (
+    char_length(setup_instructions) between 20 and 3000
+  ),
+  dependency_notes text not null check (
+    char_length(dependency_notes) between 10 and 3000
+  ),
+  tested_environment text not null check (
+    char_length(tested_environment) between 3 and 500
+  ),
+  default_branch text not null default 'main' check (
+    default_branch ~ '^[A-Za-z0-9._/-]+$'
+  ),
+  last_tested_commit text check (
+    last_tested_commit is null
+    or last_tested_commit ~ '^[0-9a-fA-F]{7,64}$'
+  ),
   status public.project_status not null default 'draft',
   difficulty public.difficulty_level not null,
   recommended_skill_level public.skill_level not null,
@@ -361,6 +389,15 @@ begin
     current_state,
     known_limitations,
     repository_url,
+    runtime_requirements,
+    package_manager,
+    install_command,
+    lockfile_status,
+    setup_instructions,
+    dependency_notes,
+    tested_environment,
+    default_branch,
+    last_tested_commit,
     status,
     difficulty,
     recommended_skill_level,
@@ -378,6 +415,15 @@ begin
     trim(p_payload ->> 'current_state'),
     trim(p_payload ->> 'known_limitations'),
     trim(p_payload ->> 'repository_url'),
+    trim(p_payload ->> 'runtime_requirements'),
+    trim(p_payload ->> 'package_manager'),
+    trim(p_payload ->> 'install_command'),
+    trim(p_payload ->> 'lockfile_status'),
+    trim(p_payload ->> 'setup_instructions'),
+    trim(p_payload ->> 'dependency_notes'),
+    trim(p_payload ->> 'tested_environment'),
+    trim(p_payload ->> 'default_branch'),
+    nullif(trim(p_payload ->> 'last_tested_commit'), ''),
     'published',
     (p_payload ->> 'difficulty')::public.difficulty_level,
     (p_payload ->> 'recommended_skill_level')::public.skill_level,

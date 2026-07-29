@@ -16,7 +16,8 @@ test("ドメインモデルは応募・承認ではなくビヨンドとシュ�
   assert.match(types, /ProjectExploration/);
   assert.match(types, /ProjectContinuation/);
   assert.doesNotMatch(schema, /project_applications|development_tasks/i);
-  assert.match(home, /応募も承認もなく/);
+  assert.match(home, /公開されたRepositoryから自由に始められます/);
+  assert.doesNotMatch(home, /応募も承認もなく|応募・承認なし/);
 });
 
 test("所有権・進捗・権利確認をRLSとDB関数で保護する", async () => {
@@ -55,4 +56,29 @@ test("OAuthはPKCE callbackでセッションを交換する", async () => {
   assert.match(form, /apple/);
   assert.match(callback, /exchangeCodeForSession/);
   assert.match(callback, /!value\.startsWith\("\/\/"\)/);
+});
+
+test("再現可能な開発環境と幅広い技術分類を保持する", async () => {
+  const [schema, types, validation, options, layout] = await Promise.all([
+    readFile(
+      new URL("supabase/migrations/202607290001_initial_schema.sql", root),
+      "utf8",
+    ),
+    readFile(new URL("lib/types.ts", root), "utf8"),
+    readFile(new URL("lib/validation.ts", root), "utf8"),
+    readFile(new URL("lib/technology-options.ts", root), "utf8"),
+    readFile(new URL("app/layout.tsx", root), "utf8"),
+  ]);
+
+  assert.match(schema, /runtime_requirements text not null/);
+  assert.match(schema, /lockfile_status text not null/);
+  assert.match(schema, /last_tested_commit/);
+  assert.match(types, /LockfileStatus/);
+  assert.match(validation, /installCommand/);
+  assert.match(options, /Python/);
+  assert.match(options, /C\+\+/);
+  assert.match(options, /画像処理/);
+  assert.match(options, /機械学習/);
+  assert.match(options, /getTechnologyColor/);
+  assert.match(layout, /@fontsource-variable\/mona-sans/);
 });

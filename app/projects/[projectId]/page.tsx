@@ -6,8 +6,16 @@ import { OwnerProjectControls } from "@/components/owner-project-controls";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getProject, getProjectContinuations } from "@/lib/projects";
+import type { LockfileStatus } from "@/lib/types";
 
 type Params = Promise<{ projectId: string }>;
+
+const lockfileLabels: Record<LockfileStatus, string> = {
+  committed: "RepositoryにCommit済み",
+  missing: "Lockfileなし",
+  not_applicable: "対象外",
+  unknown: "不明",
+};
 
 export async function generateMetadata({
   params,
@@ -56,6 +64,7 @@ export default async function ProjectDetailPage({
 
         <nav className="repo-tabs" aria-label="Project内ナビゲーション">
           <a aria-current="page" href="#overview">概要</a>
+          <a href="#environment">開発環境</a>
           <a href="#implemented">実装済み</a>
           <a href="#planned">構想</a>
           <a href="#shoots">シュート <span>{continuations.length}</span></a>
@@ -86,6 +95,56 @@ export default async function ProjectDetailPage({
                 <div className="notice-card warning">
                   <strong>既知の制約・不具合</strong>
                   <p>{project.knownLimitations}</p>
+                </div>
+
+                <h2 id="environment">開発環境と依存関係</h2>
+                <div className="notice-card dependency-notice">
+                  <strong>最初に環境を揃えてください</strong>
+                  <p>
+                    Runtime、Package Manager、Lockfileをこの記載に合わせてからForkを変更すると、既存Moduleとの衝突を減らせます。
+                  </p>
+                </div>
+                <dl className="environment-grid">
+                  <div>
+                    <dt>Runtime・Version</dt>
+                    <dd>{project.runtimeRequirements}</dd>
+                  </div>
+                  <div>
+                    <dt>Package Manager</dt>
+                    <dd>{project.packageManager}</dd>
+                  </div>
+                  <div>
+                    <dt>Install Command</dt>
+                    <dd><code>{project.installCommand}</code></dd>
+                  </div>
+                  <div>
+                    <dt>Lockfile</dt>
+                    <dd>{lockfileLabels[project.lockfileStatus]}</dd>
+                  </div>
+                  <div>
+                    <dt>動作確認環境</dt>
+                    <dd>{project.testedEnvironment}</dd>
+                  </div>
+                  <div>
+                    <dt>基準Branch</dt>
+                    <dd><code>{project.defaultBranch}</code></dd>
+                  </div>
+                  {project.lastTestedCommit && (
+                    <div>
+                      <dt>最終確認Commit</dt>
+                      <dd><code>{project.lastTestedCommit}</code></dd>
+                    </div>
+                  )}
+                </dl>
+                <div className="environment-notes">
+                  <section>
+                    <h3>Setup手順</h3>
+                    <p>{project.setupInstructions}</p>
+                  </section>
+                  <section>
+                    <h3>依存関係・互換性の注意</h3>
+                    <p>{project.dependencyNotes}</p>
+                  </section>
                 </div>
 
                 <h2 id="implemented">実装済みの機能</h2>
@@ -215,6 +274,25 @@ export default async function ProjectDetailPage({
               </ul>
             </section>
 
+            <section className="sidebar-section environment-summary">
+              <h2>開発前チェック</h2>
+              <dl>
+                <div>
+                  <dt>Runtime</dt>
+                  <dd>{project.runtimeRequirements}</dd>
+                </div>
+                <div>
+                  <dt>Package Manager</dt>
+                  <dd>{project.packageManager}</dd>
+                </div>
+                <div>
+                  <dt>Lockfile</dt>
+                  <dd>{lockfileLabels[project.lockfileStatus]}</dd>
+                </div>
+              </dl>
+              <a href="#environment">Setup情報を確認 →</a>
+            </section>
+
             <section className="sidebar-section terms-box">
               <h2>ライセンスと利用条件</h2>
               <strong>{project.licenseIdentifier}</strong>
@@ -227,8 +305,7 @@ export default async function ProjectDetailPage({
             <div className="rights-note">
               <strong>所有権は移転しません</strong>
               <p>
-                学習者は自分のForkで開発します。元Repositoryへの反映は別途Pull
-                Request等で提案してください。
+                学習者は自分のForkで開発します。元Repositoryへの反映は別途Pull Request等で提案してください。
               </p>
             </div>
 

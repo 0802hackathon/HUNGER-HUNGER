@@ -17,6 +17,17 @@ export const sampleProjects: Project[] = [
     knownLimitations:
       "タイムゾーンを跨ぐと連続日数がずれることがあります。E2Eテストは未導入です。",
     repositoryUrl: "https://github.com/vercel/next.js",
+    runtimeRequirements: "Node.js 22.x",
+    packageManager: "pnpm 10",
+    installCommand: "pnpm install --frozen-lockfile",
+    lockfileStatus: "committed",
+    setupInstructions:
+      ".env.exampleを.env.localへコピーしてSupabaseのURLと公開Keyを設定し、依存関係を導入後にpnpm devを実行します。",
+    dependencyNotes:
+      "pnpm-lock.yamlを基準にしてください。認証Packageを更新する場合はSupabase SSRとの互換性を先に確認してください。",
+    testedEnvironment: "Windows 11 / macOS 15 / Node.js 22.13",
+    defaultBranch: "main",
+    lastTestedCommit: "a1b2c3d",
     status: "published",
     difficulty: "beginner",
     recommendedSkillLevel: "beginner",
@@ -62,6 +73,17 @@ export const sampleProjects: Project[] = [
     knownLimitations:
       "検索語の表記揺れ、位置情報拒否時の導線、空状態の説明が不足しています。",
     repositoryUrl: "https://github.com/supabase/supabase",
+    runtimeRequirements: "Node.js 20.x以上",
+    packageManager: "npm 10",
+    installCommand: "npm ci",
+    lockfileStatus: "committed",
+    setupInstructions:
+      ".env.exampleを複製して地図APIの公開Keyを設定し、npm ciの後にnpm run devを実行します。",
+    dependencyNotes:
+      "package-lock.jsonを維持してください。地図SDKのMajor Versionを上げるとMarker APIの変更が必要です。",
+    testedEnvironment: "Ubuntu 24.04 / Node.js 20.16",
+    defaultBranch: "main",
+    lastTestedCommit: "b2c3d4e",
     status: "published",
     difficulty: "intermediate",
     recommendedSkillLevel: "intermediate",
@@ -106,6 +128,17 @@ export const sampleProjects: Project[] = [
     knownLimitations:
       "Safariで録音形式が異なります。大きなファイルの再送処理がありません。",
     repositoryUrl: "https://github.com/microsoft/TypeScript",
+    runtimeRequirements: "Node.js 22.x / MediaRecorder対応ブラウザ",
+    packageManager: "pnpm 10",
+    installCommand: "pnpm install --frozen-lockfile",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "Storage Bucketを作成して環境変数を設定し、pnpm installの後にHTTPSの開発環境で起動します。",
+    dependencyNotes:
+      "録音CodecはOSとブラウザで異なります。音声処理Packageを追加する前にSafariでのBundleと再生を確認してください。",
+    testedEnvironment: "macOS 15 Safari / Windows 11 Chrome",
+    defaultBranch: "develop",
+    lastTestedCommit: "c3d4e5f",
     status: "published",
     difficulty: "advanced",
     recommendedSkillLevel: "intermediate",
@@ -150,13 +183,24 @@ export const sampleProjects: Project[] = [
     knownLimitations:
       "不適切投稿の通報・非表示、投稿期限、大学ごとのデータ分離が未実装です。",
     repositoryUrl: "https://github.com/tailwindlabs/tailwindcss",
+    runtimeRequirements: "Node.js 20.x以上",
+    packageManager: "npm 10",
+    installCommand: "npm ci",
+    lockfileStatus: "committed",
+    setupInstructions:
+      ".env.exampleから環境変数を作成し、Supabase Migration適用後にnpm run devで起動します。",
+    dependencyNotes:
+      "画像処理Libraryは現在のVersionに固定しています。Package更新後はアップロードとThumbnail生成を再確認してください。",
+    testedEnvironment: "Windows 11 / Ubuntu 24.04 / Node.js 20.15",
+    defaultBranch: "main",
+    lastTestedCommit: "d4e5f6a",
     status: "published",
     difficulty: "intermediate",
     recommendedSkillLevel: "beginner",
     licenseIdentifier: "MIT",
     usageTerms:
       "個人情報を含まないダミーデータでの学習利用を許可します。実在の大学名は使用しないでください。",
-    technologies: ["Next.js", "Supabase", "Tailwind CSS"],
+    technologies: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
     learnableTechnologies: ["画像アップロード", "検索UI", "モデレーション"],
     implementedFeatures: [
       { id: "cf-1", title: "落とし物投稿" },

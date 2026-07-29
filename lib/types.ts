@@ -2,6 +2,11 @@ export type ProjectStatus = "draft" | "published" | "completed" | "archived";
 export type Difficulty = "beginner" | "intermediate" | "advanced" | "expert";
 export type SkillLevel = "beginner" | "intermediate" | "advanced";
 export type ExplorationStatus = "active" | "paused" | "completed";
+export type LockfileStatus =
+  | "committed"
+  | "missing"
+  | "not_applicable"
+  | "unknown";
 
 export type Feature = {
   id: string;
@@ -20,6 +25,15 @@ export type Project = {
   currentState: string;
   knownLimitations: string;
   repositoryUrl: string;
+  runtimeRequirements: string;
+  packageManager: string;
+  installCommand: string;
+  lockfileStatus: LockfileStatus;
+  setupInstructions: string;
+  dependencyNotes: string;
+  testedEnvironment: string;
+  defaultBranch: string;
+  lastTestedCommit?: string;
   status: ProjectStatus;
   difficulty: Difficulty;
   recommendedSkillLevel: SkillLevel;

@@ -3,12 +3,29 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
+import {
+  LEARNING_TOPIC_OPTIONS,
+  TECHNOLOGY_OPTIONS,
+} from "@/lib/technology-options";
 
 function lines(value: FormDataEntryValue | null) {
   return String(value ?? "")
     .split("\n")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function selectedOptions(
+  formData: FormData,
+  name: string,
+  customName: string,
+) {
+  return Array.from(
+    new Set([
+      ...formData.getAll(name).map(String),
+      ...lines(formData.get(customName)),
+    ]),
+  );
 }
 
 export function ProjectForm() {
@@ -41,14 +58,33 @@ export function ProjectForm() {
       currentState: String(formData.get("currentState") ?? ""),
       knownLimitations: String(formData.get("knownLimitations") ?? ""),
       repositoryUrl: String(formData.get("repositoryUrl") ?? ""),
+      runtimeRequirements: String(
+        formData.get("runtimeRequirements") ?? "",
+      ),
+      packageManager: String(formData.get("packageManager") ?? ""),
+      installCommand: String(formData.get("installCommand") ?? ""),
+      lockfileStatus: String(formData.get("lockfileStatus") ?? ""),
+      setupInstructions: String(formData.get("setupInstructions") ?? ""),
+      dependencyNotes: String(formData.get("dependencyNotes") ?? ""),
+      testedEnvironment: String(formData.get("testedEnvironment") ?? ""),
+      defaultBranch: String(formData.get("defaultBranch") ?? ""),
+      lastTestedCommit: String(formData.get("lastTestedCommit") ?? ""),
       difficulty: String(formData.get("difficulty") ?? ""),
       recommendedSkillLevel: String(
         formData.get("recommendedSkillLevel") ?? "",
       ),
       licenseIdentifier: String(formData.get("licenseIdentifier") ?? ""),
       usageTerms: String(formData.get("usageTerms") ?? ""),
-      technologies: lines(formData.get("technologies")),
-      learnableTechnologies: lines(formData.get("learnableTechnologies")),
+      technologies: selectedOptions(
+        formData,
+        "technologies",
+        "customTechnologies",
+      ),
+      learnableTechnologies: selectedOptions(
+        formData,
+        "learnableTechnologies",
+        "customLearningTopics",
+      ),
       implementedFeatures: lines(formData.get("implementedFeatures")),
       plannedFeatures: lines(formData.get("plannedFeatures")),
       rightsConfirmed: formData.get("rightsConfirmed") === "on",
@@ -165,25 +201,55 @@ export function ProjectForm() {
                 rows={6}
               />
             </label>
-            <label>
-              <span>使用技術</span>
-              <textarea
-                name="technologies"
-                placeholder={"Next.js\nTypeScript\nSupabase"}
-                required
-                rows={5}
-              />
-            </label>
-            <label>
-              <span>学べる技術</span>
-              <textarea
-                name="learnableTechnologies"
-                placeholder={"認証\nRLS\nE2Eテスト"}
-                required
-                rows={5}
-              />
-            </label>
           </div>
+          <fieldset className="option-fieldset">
+            <legend>使用技術</legend>
+            <p>Repositoryで実際に使用している言語・Framework・基盤を選択します。</p>
+            <div className="option-grid">
+              {TECHNOLOGY_OPTIONS.map((technology) => (
+                <label className="option-chip" key={technology}>
+                  <input
+                    name="technologies"
+                    type="checkbox"
+                    value={technology}
+                  />
+                  <span>{technology}</span>
+                </label>
+              ))}
+            </div>
+            <label className="custom-option-field">
+              <span>その他（1行に1つ）</span>
+              <textarea
+                name="customTechnologies"
+                placeholder={"OpenGL\nROS 2"}
+                rows={3}
+              />
+            </label>
+          </fieldset>
+          <fieldset className="option-fieldset">
+            <legend>学びたい技術・このProjectで学べる分野</legend>
+            <p>学習者が検索するときの手掛かりになる分野を選択します。</p>
+            <div className="option-grid">
+              {LEARNING_TOPIC_OPTIONS.map((topic) => (
+                <label className="option-chip" key={topic}>
+                  <input
+                    name="learnableTechnologies"
+                    type="checkbox"
+                    value={topic}
+                  />
+                  <span>{topic}</span>
+                </label>
+              ))}
+            </div>
+            <label className="custom-option-field">
+              <span>その他（1行に1つ）</span>
+              <textarea
+                name="customLearningTopics"
+                placeholder={"コンパイラ\nロボティクス"}
+                rows={3}
+              />
+            </label>
+          </fieldset>
           <div className="two-column-fields">
             <label>
               <span>難易度</span>
@@ -208,6 +274,96 @@ export function ProjectForm() {
         <section className="form-section">
           <div className="form-section-heading">
             <span className="step-number">4</span>
+            <div>
+              <h2>開発環境と依存関係</h2>
+              <p>別の環境でも同じ依存関係を再現できる情報を残します。</p>
+            </div>
+          </div>
+          <div className="dependency-guidance">
+            RuntimeとLockfileを揃え、既存のPackage
+            Manager以外で依存関係を更新しないことが、衝突を避ける第一歩です。
+          </div>
+          <div className="two-column-fields">
+            <label>
+              <span>Runtime・Version</span>
+              <input
+                name="runtimeRequirements"
+                placeholder="Node.js 22.x / Python 3.12"
+                required
+              />
+            </label>
+            <label>
+              <span>Package Manager・Version</span>
+              <input
+                name="packageManager"
+                placeholder="pnpm 10 / uv 0.8"
+                required
+              />
+            </label>
+            <label>
+              <span>Install Command</span>
+              <input
+                name="installCommand"
+                placeholder="pnpm install --frozen-lockfile"
+                required
+              />
+            </label>
+            <label>
+              <span>Lockfileの状態</span>
+              <select defaultValue="committed" name="lockfileStatus">
+                <option value="committed">RepositoryにCommit済み</option>
+                <option value="missing">Lockfileなし</option>
+                <option value="not_applicable">対象外</option>
+                <option value="unknown">不明</option>
+              </select>
+            </label>
+            <label>
+              <span>動作確認環境</span>
+              <input
+                name="testedEnvironment"
+                placeholder="Windows 11 / macOS 15 / Ubuntu 24.04"
+                required
+              />
+            </label>
+            <label>
+              <span>Default Branch</span>
+              <input defaultValue="main" name="defaultBranch" required />
+            </label>
+          </div>
+          <label>
+            <span>最後に動作確認したCommit SHA（任意）</span>
+            <input
+              maxLength={64}
+              minLength={7}
+              name="lastTestedCommit"
+              placeholder="a1b2c3d"
+            />
+          </label>
+          <label>
+            <span>Setup手順</span>
+            <textarea
+              minLength={20}
+              name="setupInstructions"
+              placeholder="環境変数の作成、Migration、起動までを順番に記載してください。"
+              required
+              rows={6}
+            />
+          </label>
+          <label>
+            <span>依存関係・互換性の注意</span>
+            <textarea
+              minLength={10}
+              name="dependencyNotes"
+              placeholder="Version固定の理由、衝突しやすいModule、OS固有の制約を記載してください。"
+              required
+              rows={5}
+            />
+          </label>
+        </section>
+
+        <section className="form-section">
+          <div className="form-section-heading">
+            <span className="step-number">5</span>
             <div>
               <h2>Repositoryと利用条件</h2>
               <p>自由に開発できる範囲を誤解なく伝えます。</p>
@@ -259,6 +415,7 @@ export function ProjectForm() {
           </div>
           <ul className="check-list">
             <li>Repositoryは公開されていますか</li>
+            <li>RuntimeとLockfileを明記しましたか</li>
             <li>ライセンスを確認しましたか</li>
             <li>秘密情報を削除しましたか</li>
             <li>所有権は移転しないと理解していますか</li>

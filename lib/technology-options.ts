@@ -1,0 +1,163 @@
+export const TECHNOLOGY_OPTIONS = [
+  "JavaScript",
+  "TypeScript",
+  "Python",
+  "Java",
+  "Kotlin",
+  "Swift",
+  "Go",
+  "Rust",
+  "C",
+  "C++",
+  "C#",
+  "PHP",
+  "Ruby",
+  "Dart",
+  "R",
+  "SQL",
+  "Shell",
+  "HTML",
+  "CSS",
+  "React",
+  "Next.js",
+  "Vue.js",
+  "Nuxt",
+  "Angular",
+  "Svelte",
+  "Node.js",
+  "Express",
+  "Django",
+  "FastAPI",
+  "Flask",
+  "Spring Boot",
+  "Ruby on Rails",
+  "Laravel",
+  "Flutter",
+  "React Native",
+  "Tailwind CSS",
+  "Supabase",
+  "Firebase",
+  "PostgreSQL",
+  "MySQL",
+  "SQLite",
+  "MongoDB",
+  "Redis",
+  "Docker",
+  "AWS",
+  "Google Cloud",
+  "Azure",
+  "OpenCV",
+  "Web Audio API",
+  "PyTorch",
+  "TensorFlow",
+] as const;
+
+export const LEARNING_TOPIC_OPTIONS = [
+  "フロントエンド",
+  "バックエンド",
+  "API設計",
+  "認証",
+  "認可・RLS",
+  "データベース設計",
+  "SQL",
+  "テスト",
+  "E2Eテスト",
+  "CI/CD",
+  "Docker",
+  "クラウド",
+  "セキュリティ",
+  "パフォーマンス",
+  "リファクタリング",
+  "アクセシビリティ",
+  "レスポンシブUI",
+  "画像処理",
+  "音声処理",
+  "動画処理",
+  "機械学習",
+  "深層学習",
+  "自然言語処理",
+  "データ分析",
+  "データ可視化",
+  "IoT",
+  "組み込み開発",
+  "WebSocket",
+  "地図・位置情報",
+  "ファイルStorage",
+  "ブラウザ互換性",
+] as const;
+
+const technologyColors: Record<string, string> = {
+  JavaScript: "#f1e05a",
+  TypeScript: "#3178c6",
+  Python: "#3572a5",
+  Java: "#b07219",
+  Kotlin: "#a97bff",
+  Swift: "#f05138",
+  Go: "#00add8",
+  Rust: "#dea584",
+  C: "#555555",
+  "C++": "#f34b7d",
+  "C#": "#178600",
+  PHP: "#4f5d95",
+  Ruby: "#701516",
+  Dart: "#00b4ab",
+  R: "#198ce7",
+  Shell: "#89e051",
+  HTML: "#e34c26",
+  CSS: "#663399",
+  React: "#149eca",
+  "Next.js": "#111111",
+  "Vue.js": "#41b883",
+  Svelte: "#ff3e00",
+  Docker: "#2496ed",
+};
+
+const fallbackColors = [
+  "#8250df",
+  "#0969da",
+  "#1f883d",
+  "#bf8700",
+  "#cf222e",
+  "#0550ae",
+];
+
+const programmingLanguages = new Set([
+  "JavaScript",
+  "TypeScript",
+  "Python",
+  "Java",
+  "Kotlin",
+  "Swift",
+  "Go",
+  "Rust",
+  "C",
+  "C++",
+  "C#",
+  "PHP",
+  "Ruby",
+  "Dart",
+  "R",
+  "SQL",
+  "Shell",
+  "HTML",
+  "CSS",
+]);
+
+export function getPrimaryLanguage(technologies: string[]) {
+  return (
+    technologies.find((technology) => programmingLanguages.has(technology)) ??
+    technologies[0] ??
+    "Other"
+  );
+}
+
+export function getTechnologyColor(technology: string) {
+  const knownColor = technologyColors[technology];
+  if (knownColor) return knownColor;
+
+  const hash = Array.from(technology).reduce(
+    (value, character) => value + character.codePointAt(0)!,
+    0,
+  );
+  return fallbackColors[hash % fallbackColors.length];
+}
