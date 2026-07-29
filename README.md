@@ -2,6 +2,28 @@
 
 開発を止めた人が残した未完成Projectと、実践的な題材を探す学習者をつなぐWebアプリです。ソースコードや所有権を譲渡するサービスではありません。元の投稿者が所有者のまま、学習者は公開GitHub RepositoryをForkまたはCloneして自由に学習します。
 
+GitHub Repository: https://github.com/0802hackathon/HUNGER-HUNGER
+
+## 共同開発を始める
+
+Node.js 22.13以上とCorepackが必要です。
+
+```bash
+git clone https://github.com/0802hackathon/HUNGER-HUNGER.git
+cd HUNGER-HUNGER
+corepack enable
+pnpm install --frozen-lockfile
+cp .env.example .env.local
+pnpm dev
+```
+
+`http://localhost:3000`を開きます。Supabase未接続でも、読み取り画面はデモ
+データで確認できます。
+
+変更は`main`へ直接Commitせず、Branchを作ってPull Requestで共有します。
+詳しいBranch名、検証コマンド、セキュリティ上の注意は
+[`CONTRIBUTING.md`](CONTRIBUTING.md)を確認してください。
+
 ## MVPの言葉
 
 - **ビヨンド**: 学習者が公開Repositoryを開き、自分の環境で開発を始めること。応募・承認・担当Taskはありません。
@@ -23,9 +45,10 @@
 Node.js 22.13以上が必要です。
 
 ```bash
-npm install
+corepack enable
+pnpm install --frozen-lockfile
 cp .env.example .env.local
-npm run dev
+pnpm dev
 ```
 
 `http://localhost:3000` を開きます。Supabase環境変数が未設定の場合、読み取り画面はデモデータで動作し、書き込み操作は保存されません。
@@ -109,20 +132,20 @@ Migrationは次を作成します。
 ## コマンド
 
 ```bash
-npm run dev        # 開発サーバー
-npm run build      # Production build
-npm run lint       # ESLint
-npm run typecheck  # TypeScript
-npm test           # レンダリング・API・ドメインテスト
+pnpm dev        # 開発サーバー
+pnpm build      # Production build
+pnpm lint       # ESLint
+pnpm typecheck  # TypeScript
+pnpm test       # レンダリング・API・ドメインテスト
 ```
 
 完全検証は次の順で実行します。
 
 ```bash
-npm run lint
-npm run typecheck
-npm run build
-npm test
+pnpm lint
+pnpm typecheck
+pnpm build
+pnpm test
 ```
 
 ## 主要画面
