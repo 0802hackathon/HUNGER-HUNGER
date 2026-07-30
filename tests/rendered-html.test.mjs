@@ -43,9 +43,13 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.match(html, /hunger explore --tech typescript/);
   assert.match(html, /Repositoryを開きました/);
   assert.match(html, /terminal-dot red/);
+  assert.match(html, /ACTIVE PROJECTS/);
+  assert.match(html, /公開Project/);
+  assert.match(html, /技術から探す/);
   assert.match(html, /concept-flow-simple-v2\.png/);
+  assert.match(html, /og\.png/);
   assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし/);
-  assert.doesNotMatch(html, /codex-preview|Starter Project/i);
+  assert.doesNotMatch(html, /Starter Project/i);
 });
 
 test("Project一覧が検索UIとデモProjectを表示する", async () => {
