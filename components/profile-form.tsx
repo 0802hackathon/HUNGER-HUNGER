@@ -44,10 +44,9 @@ export function ProfileForm() {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const supabase = getBrowserSupabase();
-    if (!supabase) return;
-
     async function load() {
+      const supabase = await getBrowserSupabase();
+      if (!supabase) return;
       const userResult = await supabase!.auth.getUser();
       const user = userResult.data.user;
       if (!user) {
@@ -96,7 +95,7 @@ export function ProfileForm() {
   }, []);
 
   async function submit(formData: FormData) {
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     const session = supabase ? await supabase.auth.getSession() : null;
     const token = session?.data.session?.access_token;
     if (!token) {

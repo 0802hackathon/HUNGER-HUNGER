@@ -34,7 +34,7 @@ export function ProjectForm() {
   const [message, setMessage] = useState("");
 
   async function submit(formData: FormData) {
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     if (!supabase) {
       setMessage(
         "Supabase未接続のため投稿は保存されません。.env.localを設定してください。",

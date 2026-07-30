@@ -71,6 +71,20 @@ test("Supabase未接続のローカル環境はデモデータを使用する", 
   assert.match(config, /return null/);
 });
 
+test("初期表示では認証SDKと画像Componentを読み込まない", async () => {
+  const [browserClient, home, styles] = await Promise.all([
+    readFile(new URL("lib/supabase-browser.ts", root), "utf8"),
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
+
+  assert.match(browserClient, /import\("@supabase\/ssr"\)/);
+  assert.doesNotMatch(browserClient, /^import .* from "@supabase\/ssr"/m);
+  assert.doesNotMatch(home, /from "next\/image"/);
+  assert.match(home, /concept-illustration concept-save/);
+  assert.match(styles, /concept-flow-simple-v2\.webp/);
+});
+
 test("再現可能な開発環境と幅広い技術分類を保持する", async () => {
   const [schema, types, validation, options, layout] = await Promise.all([
     readFile(

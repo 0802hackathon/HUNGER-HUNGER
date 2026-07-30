@@ -20,7 +20,7 @@ export function BeyondButton({
     if (disabled) return;
     window.open(repositoryUrl, "_blank", "noopener,noreferrer");
 
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     if (!supabase) {
       setMessage("Repositoryを開きました。Supabase接続後は学習履歴も記録できます。");
       return;
