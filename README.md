@@ -2,16 +2,16 @@
 
 開発を止めた人が残した未完成Projectと、実践的な題材を探す学習者をつなぐWebアプリです。ソースコードや所有権を譲渡するサービスではありません。元の投稿者が所有者のまま、学習者は公開GitHub RepositoryをForkまたはCloneして自由に学習します。
 
-GitHub Repository: https://github.com/0802hackathon/HUNGER-HUNGER
-
 ## 共同開発を始める
 
-Node.js 22.13以上とCorepackが必要です。
+この章では、サイトの閲覧のために、各メンバーが自分のPCでローカル起動する方法を説明します。
+
+Node.js 22.13以上が必要です。
 
 ```bash
 git clone https://github.com/0802hackathon/HUNGER-HUNGER.git
 cd HUNGER-HUNGER
-corepack enable
+npm install --global pnpm@11.9.0
 pnpm install --frozen-lockfile
 cp .env.example .env.local
 pnpm dev
@@ -45,7 +45,7 @@ pnpm dev
 Node.js 22.13以上が必要です。
 
 ```bash
-corepack enable
+npm install --global pnpm@11.9.0
 pnpm install --frozen-lockfile
 cp .env.example .env.local
 pnpm dev
