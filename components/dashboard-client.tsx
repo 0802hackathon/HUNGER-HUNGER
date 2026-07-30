@@ -204,7 +204,7 @@ export function DashboardClient() {
         </Link>
       </aside>
 
-      <main className="dashboard-main">
+      <section className="dashboard-main">
         <div className="dashboard-heading">
           <div>
             <span className="eyebrow">YOUR ACTIVITY</span>
@@ -325,7 +325,7 @@ export function DashboardClient() {
             <p className="empty-copy">投稿したProjectはまだありません。</p>
           )}
         </section>
-      </main>
+      </section>
     </div>
   );
 }

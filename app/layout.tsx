@@ -21,10 +21,10 @@ export const metadata: Metadata = {
       "未完成の構想と、実践的な題材を探すためのプラットフォーム。公開されたRepositoryから自由に始められます。",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "未完成のコードから次の実装へ架かる橋",
+        alt: "未完成のProjectから次の実装へCommitがつながるHUNGER×HUNGERのイメージ",
       },
     ],
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "HUNGER×HUNGER",
     description: "未完成のコードを、次の学びへ。",
-    images: ["/og-image.png"],
+    images: ["/og.png"],
   },
 };
 

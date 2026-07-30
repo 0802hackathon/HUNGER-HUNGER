@@ -28,7 +28,10 @@ export function ProjectCard({ project }: { project: Project }) {
       <div className="repo-card-main">
         <div className="repo-card-heading">
           <div>
-            <div className="repo-owner">{project.ownerName} /</div>
+            <div className="repo-owner">
+              <span aria-hidden="true" />
+              PUBLIC PROJECT · {project.ownerName}
+            </div>
             <h2>
               <Link href={`/projects/${project.id}`}>{project.title}</Link>
             </h2>
@@ -66,14 +69,20 @@ export function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <div className="repo-card-side">
-        <div className="side-label">学べること</div>
+        <div className="side-label">
+          <span>学べること</span>
+          <strong>{project.learnableTechnologies.length}</strong>
+        </div>
         <ul>
           {project.learnableTechnologies.slice(0, 4).map((technology) => (
-            <li key={technology}>{technology}</li>
+            <li key={technology}>
+              <span aria-hidden="true">↳</span> {technology}
+            </li>
           ))}
         </ul>
         <Link className="text-link" href={`/projects/${project.id}`}>
-          構想とコードを見る →
+          <span>構想とコードを見る</span>
+          <span aria-hidden="true">→</span>
         </Link>
       </div>
     </article>
