@@ -2,20 +2,22 @@
 
 import { createBrowserClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getSupabasePublicConfig } from "./supabase-config";
 
 let client: SupabaseClient | null = null;
 
 export function isBrowserSupabaseConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  );
+  return Boolean(getSupabasePublicConfig());
 }
 
 export function getBrowserSupabase() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return null;
-  if (!client) client = createBrowserClient(url, key) as SupabaseClient;
+  const config = getSupabasePublicConfig();
+  if (!config) return null;
+  if (!client) {
+    client = createBrowserClient(
+      config.url,
+      config.publishableKey,
+    ) as SupabaseClient;
+  }
   return client;
 }

@@ -58,6 +58,19 @@ test("OAuthはPKCE callbackでセッションを交換する", async () => {
   assert.match(callback, /!value\.startsWith\("\/\/"\)/);
 });
 
+test("Supabase未接続のローカル環境はデモデータを使用する", async () => {
+  const [exampleEnv, config] = await Promise.all([
+    readFile(new URL(".env.example", root), "utf8"),
+    readFile(new URL("lib/supabase-config.ts", root), "utf8"),
+  ]);
+
+  assert.match(exampleEnv, /^NEXT_PUBLIC_SUPABASE_URL=$/m);
+  assert.match(exampleEnv, /^NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$/m);
+  assert.match(config, /https:\/\/your-project\.supabase\.co/);
+  assert.match(config, /sb_publishable_your_key/);
+  assert.match(config, /return null/);
+});
+
 test("再現可能な開発環境と幅広い技術分類を保持する", async () => {
   const [schema, types, validation, options, layout] = await Promise.all([
     readFile(
