@@ -81,9 +81,9 @@ export function DashboardClient() {
   );
 
   useEffect(() => {
-    const supabase = getBrowserSupabase();
-    if (!supabase) return;
     async function load() {
+      const supabase = await getBrowserSupabase();
+      if (!supabase) return;
       const userResult = await supabase!.auth.getUser();
       const user = userResult.data.user;
       if (!user) {

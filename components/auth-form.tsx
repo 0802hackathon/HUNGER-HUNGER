@@ -29,7 +29,7 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
   }
 
   async function signInWithProvider(provider: SocialProvider) {
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     if (!supabase) {
       setMessage(
         "Supabaseの環境変数が未設定です。接続後にソーシャルログインを利用できます。",
@@ -56,7 +56,7 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
   }
 
   async function submitEmail(formData: FormData) {
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     if (!supabase) {
       setMessage(
         "Supabaseの環境変数が未設定です。.env.localを設定すると認証を利用できます。",

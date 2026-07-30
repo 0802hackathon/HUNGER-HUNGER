@@ -46,8 +46,9 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.match(html, /ACTIVE PROJECTS/);
   assert.match(html, /公開Project/);
   assert.match(html, /技術から探す/);
-  assert.match(html, /concept-flow-simple-v2\.png/);
+  assert.match(html, /未完成のコードと設計を整理して残すイラスト/);
   assert.match(html, /og\.png/);
+  assert.doesNotMatch(html, /loading-page/);
   assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし/);
   assert.doesNotMatch(html, /Starter Project/i);
 });

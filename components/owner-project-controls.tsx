@@ -19,11 +19,19 @@ export function OwnerProjectControls({
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const supabase = getBrowserSupabase();
-    if (!supabase) return;
-    supabase.rpc("current_profile_id").then((result) => {
-      setIsOwner(result.data === ownerId);
-    });
+    let cancelled = false;
+
+    async function checkOwner() {
+      const supabase = await getBrowserSupabase();
+      if (!supabase) return;
+      const result = await supabase.rpc("current_profile_id");
+      if (!cancelled) setIsOwner(result.data === ownerId);
+    }
+    void checkOwner();
+
+    return () => {
+      cancelled = true;
+    };
   }, [ownerId]);
 
   async function archive() {
@@ -34,7 +42,7 @@ export function OwnerProjectControls({
     ) {
       return;
     }
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     const session = supabase ? await supabase.auth.getSession() : null;
     const token = session?.data.session?.access_token;
     if (!token) return;

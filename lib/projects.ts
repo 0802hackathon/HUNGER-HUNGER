@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { sampleContinuations, sampleProjects } from "./sample-data";
+import { getSupabasePublicConfig } from "./supabase-config";
 import {
   LEARNING_TOPIC_OPTIONS,
   TECHNOLOGY_OPTIONS,
@@ -12,17 +13,13 @@ import type {
 } from "./types";
 
 export function isSupabaseConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  );
+  return Boolean(getSupabasePublicConfig());
 }
 
 function publicClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, {
+  const config = getSupabasePublicConfig();
+  if (!config) return null;
+  return createClient(config.url, config.publishableKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
@@ -55,6 +52,13 @@ function matchesFilters(project: Project, filters: ProjectFilters) {
       project.learnableTechnologies.includes(filters.learningTechnology)) &&
     (!filters.difficulty || project.difficulty === filters.difficulty)
   );
+}
+
+export function filterProjects(
+  projects: Project[],
+  filters: ProjectFilters = {},
+) {
+  return projects.filter((project) => matchesFilters(project, filters));
 }
 
 function mapProject(row: Record<string, unknown>): Project {
@@ -128,7 +132,7 @@ export async function listProjects(
   filters: ProjectFilters = {},
 ): Promise<Project[]> {
   const client = publicClient();
-  if (!client) return sampleProjects.filter((item) => matchesFilters(item, filters));
+  if (!client) return filterProjects(sampleProjects, filters);
 
   const { data, error } = await client
     .from("projects")
@@ -140,10 +144,10 @@ export async function listProjects(
 
   if (error || !data) {
     console.error("Project list fallback:", error?.message);
-    return sampleProjects.filter((item) => matchesFilters(item, filters));
+    return filterProjects(sampleProjects, filters);
   }
 
-  return data.map((row) => mapProject(row)).filter((item) => matchesFilters(item, filters));
+  return filterProjects(data.map((row) => mapProject(row)), filters);
 }
 
 export async function getProject(id: string): Promise<Project | null> {

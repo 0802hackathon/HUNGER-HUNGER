@@ -19,7 +19,7 @@ export function ProgressUpdateForm({
   const [message, setMessage] = useState("");
 
   async function submit(formData: FormData) {
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     const session = supabase ? await supabase.auth.getSession() : null;
     const token = session?.data.session?.access_token;
     if (!token) {
