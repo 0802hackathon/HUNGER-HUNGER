@@ -54,6 +54,13 @@ function matchesFilters(project: Project, filters: ProjectFilters) {
   );
 }
 
+export function filterProjects(
+  projects: Project[],
+  filters: ProjectFilters = {},
+) {
+  return projects.filter((project) => matchesFilters(project, filters));
+}
+
 function mapProject(row: Record<string, unknown>): Project {
   const technologyRows =
     (row.project_technologies as Array<Record<string, unknown>> | null) ?? [];
@@ -125,7 +132,7 @@ export async function listProjects(
   filters: ProjectFilters = {},
 ): Promise<Project[]> {
   const client = publicClient();
-  if (!client) return sampleProjects.filter((item) => matchesFilters(item, filters));
+  if (!client) return filterProjects(sampleProjects, filters);
 
   const { data, error } = await client
     .from("projects")
@@ -137,10 +144,10 @@ export async function listProjects(
 
   if (error || !data) {
     console.error("Project list fallback:", error?.message);
-    return sampleProjects.filter((item) => matchesFilters(item, filters));
+    return filterProjects(sampleProjects, filters);
   }
 
-  return data.map((row) => mapProject(row)).filter((item) => matchesFilters(item, filters));
+  return filterProjects(data.map((row) => mapProject(row)), filters);
 }
 
 export async function getProject(id: string): Promise<Project | null> {

@@ -823,7 +823,10 @@ textarea:focus-visible {
 }
 
 .concept-illustration {
-  background: #f6f8fa;
+  background-color: #f6f8fa;
+  background-image: url("/concept-flow-simple-v2.webp");
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
   border: 1px solid var(--border);
   border-radius: 14px;
   height: 160px;
@@ -833,25 +836,16 @@ textarea:focus-visible {
   width: 160px;
 }
 
-.concept-illustration img {
-  display: block;
-  height: 100%;
-  max-width: none;
-  position: absolute;
-  top: 0;
-  width: 300%;
+.concept-save {
+  background-position: left center;
 }
 
-.concept-save img {
-  left: 0;
+.concept-beyond {
+  background-position: center;
 }
 
-.concept-beyond img {
-  left: -100%;
-}
-
-.concept-shoot img {
-  left: -200%;
+.concept-shoot {
+  background-position: right center;
 }
 
 .concept-featured .concept-illustration {
@@ -2537,41 +2531,6 @@ textarea {
 .status-page p {
   color: var(--text-muted);
   margin-bottom: 22px;
-}
-
-.loading-page {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin: 80px auto;
-  max-width: 900px;
-  padding: 40px;
-}
-
-.loading-bar,
-.loading-line {
-  animation: shimmer 1.6s infinite linear;
-  background: linear-gradient(90deg, #eaeef2 25%, #f6f8fa 50%, #eaeef2 75%);
-  background-size: 200% 100%;
-  border-radius: 5px;
-  height: 16px;
-  margin-bottom: 16px;
-  width: 56%;
-}
-
-.loading-bar {
-  height: 34px;
-  width: 34%;
-}
-
-.loading-line.long {
-  width: 90%;
-}
-
-@keyframes shimmer {
-  to {
-    background-position: -200% 0;
-  }
 }
 
 @media (max-width: 1080px) {

@@ -10,16 +10,21 @@ export function SiteHeader() {
   const router = useRouter();
 
   useEffect(() => {
-    const supabase = getBrowserSupabase();
-    if (supabase) {
-      supabase.auth.getUser().then(({ data }) => {
+    let cancelled = false;
+
+    async function loadUser() {
+      const supabase = await getBrowserSupabase();
+      if (!supabase || cancelled) return;
+      const { data } = await supabase.auth.getUser();
+      if (!cancelled) {
         setDisplayName(
           data.user?.user_metadata?.display_name ??
             data.user?.email?.split("@")[0] ??
             null,
         );
-      });
+      }
     }
+    void loadUser();
 
     const openProjectSearch = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
@@ -36,7 +41,10 @@ export function SiteHeader() {
     };
 
     window.addEventListener("keydown", openProjectSearch);
-    return () => window.removeEventListener("keydown", openProjectSearch);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("keydown", openProjectSearch);
+    };
   }, [router]);
 
   return (

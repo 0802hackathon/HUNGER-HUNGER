@@ -10,7 +10,7 @@ export function ContinuationForm({ projectId }: { projectId: string }) {
   const [message, setMessage] = useState("");
 
   async function submit(formData: FormData) {
-    const supabase = getBrowserSupabase();
+    const supabase = await getBrowserSupabase();
     if (!supabase) {
       setMessage(
         "Supabase未接続のためシュートは保存されません。.env.localを設定してください。",

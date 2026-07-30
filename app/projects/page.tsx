@@ -5,6 +5,7 @@ import { ProjectFilters } from "@/components/project-filters";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import {
+  filterProjects,
   getLearningTechnologyOptions,
   getTechnologyOptions,
   listProjects,
@@ -36,7 +37,7 @@ export default async function ProjectsPage({
     learningTechnology: params.learningTechnology,
     difficulty: (params.difficulty ?? "") as Difficulty | "",
   };
-  const projects = await listProjects(current);
+  const projects = filterProjects(allProjects, current);
 
   return (
     <>

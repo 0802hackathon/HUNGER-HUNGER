@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ProjectCard } from "@/components/project-card";
 import { SiteFooter } from "@/components/site-footer";
@@ -145,15 +144,11 @@ export default async function Home() {
                   <span className="concept-number">01</span>
                   <span className="concept-label">OWNER</span>
                 </div>
-                <div className="concept-illustration concept-save">
-                  <Image
-                    alt="未完成のコードと設計を整理して残すイラスト"
-                    height={160}
-                    sizes="480px"
-                    src="/concept-flow-simple-v2.png"
-                    width={480}
-                  />
-                </div>
+                <div
+                  aria-label="未完成のコードと設計を整理して残すイラスト"
+                  className="concept-illustration concept-save"
+                  role="img"
+                />
                 <h3>残す</h3>
                 <p>コードだけでは伝わらない、目的、現在地、止めた理由、実現したかった構想まで公開します。</p>
               </article>
@@ -162,15 +157,11 @@ export default async function Home() {
                   <span className="concept-number">02</span>
                   <span className="concept-label">LEARNER</span>
                 </div>
-                <div className="concept-illustration concept-beyond">
-                  <Image
-                    alt="公開Repositoryを自分の開発環境へつなぐイラスト"
-                    height={160}
-                    sizes="480px"
-                    src="/concept-flow-simple-v2.png"
-                    width={480}
-                  />
-                </div>
+                <div
+                  aria-label="公開Repositoryを自分の開発環境へつなぐイラスト"
+                  className="concept-illustration concept-beyond"
+                  role="img"
+                />
                 <h3>ビヨンドする</h3>
                 <p>技術、難易度、学べることから題材を選び、自分の環境へForkまたはCloneして始めます。</p>
               </article>
@@ -179,15 +170,11 @@ export default async function Home() {
                   <span className="concept-number">03</span>
                   <span className="concept-label">CONTINUATION</span>
                 </div>
-                <div className="concept-illustration concept-shoot">
-                  <Image
-                    alt="追加開発した成果を共有Projectへ投稿するイラスト"
-                    height={160}
-                    sizes="480px"
-                    src="/concept-flow-simple-v2.png"
-                    width={480}
-                  />
-                </div>
+                <div
+                  aria-label="追加開発した成果を共有Projectへ投稿するイラスト"
+                  className="concept-illustration concept-shoot"
+                  role="img"
+                />
                 <h3>シュートする</h3>
                 <p>追加実装したForkと学んだことを公開し、元Projectから辿れる成果として残します。</p>
               </article>
