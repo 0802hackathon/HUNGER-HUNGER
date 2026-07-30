@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { sampleContinuations, sampleProjects } from "./sample-data";
+import { getSupabasePublicConfig } from "./supabase-config";
 import {
   LEARNING_TOPIC_OPTIONS,
   TECHNOLOGY_OPTIONS,
@@ -12,17 +13,13 @@ import type {
 } from "./types";
 
 export function isSupabaseConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-  );
+  return Boolean(getSupabasePublicConfig());
 }
 
 function publicClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key, {
+  const config = getSupabasePublicConfig();
+  if (!config) return null;
+  return createClient(config.url, config.publishableKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }

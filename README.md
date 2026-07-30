@@ -56,11 +56,13 @@ pnpm dev
 ### 環境変数
 
 ```dotenv
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_your_key
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
+読み取り画面だけを確認する場合、Supabaseの2項目は空のまま使用できます。
+Supabaseへ接続する場合は実際のProject URLとPublishable Keyを設定してください。
 Service Role Keyは使用せず、ブラウザとRoute Handlerの双方をRLSで保護します。
 
 ## Supabaseセットアップ
