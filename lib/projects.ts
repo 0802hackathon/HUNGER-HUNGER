@@ -10,6 +10,7 @@ import type {
   Project,
   ProjectContinuation,
   ProjectFilters,
+  ProjectSort,
 } from "./types";
 
 export function isSupabaseConfigured() {
@@ -59,6 +60,37 @@ export function filterProjects(
   filters: ProjectFilters = {},
 ) {
   return projects.filter((project) => matchesFilters(project, filters));
+}
+
+export function sortProjects(
+  projects: Project[],
+  sort: ProjectSort = "updated-desc",
+) {
+  const byUpdatedAtDescending = (left: Project, right: Project) =>
+    new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime();
+
+  return [...projects].sort((left, right) => {
+    switch (sort) {
+      case "updated-asc":
+        return (
+          new Date(left.updatedAt).getTime() -
+          new Date(right.updatedAt).getTime()
+        );
+      case "beyond-desc":
+        return (
+          right.beyondCount - left.beyondCount ||
+          byUpdatedAtDescending(left, right)
+        );
+      case "continuation-desc":
+        return (
+          right.continuationCount - left.continuationCount ||
+          byUpdatedAtDescending(left, right)
+        );
+      case "updated-desc":
+      default:
+        return byUpdatedAtDescending(left, right);
+    }
+  });
 }
 
 function mapProject(row: Record<string, unknown>): Project {

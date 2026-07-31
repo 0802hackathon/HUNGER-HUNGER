@@ -72,6 +72,38 @@ test("Project一覧が検索UIとデモProjectを表示する", async () => {
   assert.match(html, /Python/);
   assert.match(html, /画像処理/);
   assert.match(html, /危険度/);
+  assert.match(html, /Projectの並び替え/);
+  assert.match(html, /更新日の新しい順/);
+  assert.match(html, /更新日の古い順/);
+  assert.match(html, /ビヨンド数の多い順/);
+  assert.match(html, /シュート数の多い順/);
+});
+
+test("Project一覧の並び替え条件が一覧へ反映される", async () => {
+  const worker = await getWorker();
+  const cases = [
+    ["updated-asc", "Voice Journal", "Study Streak"],
+    ["beyond-desc", "Campus Lost &amp; Found", "Study Streak"],
+    ["continuation-desc", "Campus Lost &amp; Found", "Study Streak"],
+  ];
+
+  for (const [sort, firstProject, laterProject] of cases) {
+    const response = await worker.fetch(
+      new Request(`http://localhost/projects?sort=${sort}`, {
+        headers: { accept: "text/html" },
+      }),
+      env(),
+      context(),
+    );
+
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    const firstPosition = html.indexOf(firstProject);
+    const laterPosition = html.indexOf(laterProject);
+    assert.notEqual(firstPosition, -1);
+    assert.notEqual(laterPosition, -1);
+    assert.ok(firstPosition < laterPosition, `${sort}の並び順が正しい`);
+  }
 });
 
 test("Project詳細が開発環境と依存関係を表示する", async () => {
