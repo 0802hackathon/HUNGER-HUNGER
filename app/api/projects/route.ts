@@ -6,6 +6,62 @@ import {
 } from "@/lib/github-repository";
 import { projectInputSchema } from "@/lib/validation";
 
+const skillLevelByDifficulty = {
+  beginner: "beginner",
+  intermediate: "intermediate",
+  advanced: "advanced",
+  expert: "advanced",
+} as const;
+
+type ProjectStorageError = {
+  code?: string;
+  message?: string;
+};
+
+function projectStorageFailure(error: ProjectStorageError | null) {
+  const code = error?.code ?? "";
+  const message = error?.message?.toLowerCase() ?? "";
+
+  if (message.includes("authenticated profile required")) {
+    return {
+      message:
+        "プロフィールの準備が完了していません。管理者に連絡してください。",
+      status: 409,
+    };
+  }
+
+  if (
+    code === "PGRST202" ||
+    code === "42883" ||
+    message.includes("could not find the function public.create_project")
+  ) {
+    return {
+      message:
+        "Project公開機能の準備が完了していません。管理者に連絡してください。",
+      status: 503,
+    };
+  }
+
+  if (code === "22P02" || code === "23514") {
+    return {
+      message: "入力内容が保存条件を満たしていません。各項目を確認してください。",
+      status: 400,
+    };
+  }
+
+  if (code === "42501") {
+    return {
+      message: "このProjectを公開する権限を確認できませんでした。",
+      status: 403,
+    };
+  }
+
+  return {
+    message: "Projectを保存できませんでした。時間をおいて再度お試しください。",
+    status: 500,
+  };
+}
+
 export async function POST(request: Request) {
   const auth = getAuthenticatedClient(request);
   if (!auth) {
@@ -73,6 +129,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await auth.client.rpc("create_project", {
     p_payload: {
+      submission_key: parsed.data.submissionKey,
       title: parsed.data.title,
       summary: parsed.data.summary,
       motivation: parsed.data.motivation,
@@ -90,7 +147,8 @@ export async function POST(request: Request) {
       default_branch: parsed.data.defaultBranch,
       last_tested_commit: parsed.data.lastTestedCommit || null,
       difficulty: parsed.data.difficulty,
-      recommended_skill_level: parsed.data.recommendedSkillLevel,
+      recommended_skill_level:
+        skillLevelByDifficulty[parsed.data.difficulty],
       license_identifier: parsed.data.licenseIdentifier,
       usage_terms: parsed.data.usageTerms,
       technologies: parsed.data.technologies,
@@ -103,10 +161,14 @@ export async function POST(request: Request) {
   });
 
   if (error || !data) {
-    console.error("create_project failed", error?.message);
+    const failure = projectStorageFailure(error);
+    console.error("create_project failed", {
+      code: error?.code,
+      message: error?.message,
+    });
     return NextResponse.json(
-      { message: "Projectを保存できませんでした。" },
-      { status: 500 },
+      { message: failure.message },
+      { status: failure.status },
     );
   }
 

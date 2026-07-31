@@ -70,7 +70,7 @@ Service Role Keyは使用せず、ブラウザとRoute Handlerの双方をRLSで
 ## Supabaseセットアップ
 
 1. Supabaseで新しいProjectを作成します。
-2. SQL EditorまたはSupabase CLIで `supabase/migrations/202607290001_initial_schema.sql` を適用します。
+2. SQL EditorまたはSupabase CLIで `supabase/migrations/` 内のSQLをファイル名順に適用します。既存Projectでは未適用のMigrationだけを適用してください。
 3. AuthenticationのEmail providerを有効化します。
 4. Authentication → URL ConfigurationでSite URLを設定します。
 5. Redirect URLに次を追加します。

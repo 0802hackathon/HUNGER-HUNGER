@@ -78,6 +78,122 @@ test("公開前チェックは入力とGitHub情報を再判定し、投稿時�
   assert.match(styles, /\.check-item\.is-complete/);
 });
 
+test("推奨スキルレベルは入力を要求せず難易度からサーバー側で導出する", async () => {
+  const [form, validation, route] = await Promise.all([
+    readFile(new URL("components/project-form.tsx", root), "utf8"),
+    readFile(new URL("lib/validation.ts", root), "utf8"),
+    readFile(new URL("app/api/projects/route.ts", root), "utf8"),
+  ]);
+
+  assert.doesNotMatch(form, /recommendedSkillLevel/);
+  assert.doesNotMatch(validation, /recommendedSkillLevel/);
+  assert.match(route, /skillLevelByDifficulty\[parsed\.data\.difficulty\]/);
+  assert.match(route, /expert: "advanced"/);
+});
+
+test("既存AuthユーザーをProfileへ補完し、Project保存失敗を安全に分類する", async () => {
+  const [migration, route, readme] = await Promise.all([
+    readFile(
+      new URL(
+        "supabase/migrations/202607310001_backfill_auth_profiles.sql",
+        root,
+      ),
+      "utf8",
+    ),
+    readFile(new URL("app/api/projects/route.ts", root), "utf8"),
+    readFile(new URL("README.md", root), "utf8"),
+  ]);
+
+  assert.match(migration, /from auth\.users as auth_user/);
+  assert.match(migration, /where not exists/);
+  assert.match(migration, /on conflict \(auth_user_id\) do nothing/);
+  assert.match(route, /authenticated profile required/);
+  assert.match(route, /code === "PGRST202"/);
+  assert.doesNotMatch(
+    route,
+    /NextResponse\.json\(\s*\{ message: error\?\.message/,
+  );
+  assert.match(readme, /SQLをファイル名順に適用/);
+});
+
+test("公開データはRLSを通して読めるがテーブル書込権限を開放しない", async () => {
+  const grants = await readFile(
+    new URL(
+      "supabase/migrations/202607310002_grant_public_read_access.sql",
+      root,
+    ),
+    "utf8",
+  );
+
+  assert.match(grants, /grant select on table/);
+  assert.match(grants, /public\.projects/);
+  assert.match(grants, /public\.project_continuations/);
+  assert.match(grants, /to anon, authenticated/);
+  assert.doesNotMatch(grants, /grant (?:insert|update|delete|all)/i);
+});
+
+test("Project投稿は非公開の一意キーで冪等に作成される", async () => {
+  const [form, validation, route, migration] = await Promise.all([
+    readFile(new URL("components/project-form.tsx", root), "utf8"),
+    readFile(new URL("lib/validation.ts", root), "utf8"),
+    readFile(new URL("app/api/projects/route.ts", root), "utf8"),
+    readFile(
+      new URL(
+        "supabase/migrations/202607310003_project_submission_idempotency.sql",
+        root,
+      ),
+      "utf8",
+    ),
+  ]);
+
+  assert.match(form, /sessionStorage\.getItem\(SUBMISSION_KEY_STORAGE\)/);
+  assert.match(form, /window\.crypto\.randomUUID\(\)/);
+  assert.match(form, /if \(submittingRef\.current\) return/);
+  assert.match(form, /submissionKey: getSubmissionKey\(\)/);
+  assert.match(form, /clearSubmissionKey\(\);\s*router\.push/);
+  assert.match(validation, /submissionKey: z\.uuid/);
+  assert.match(route, /submission_key: parsed\.data\.submissionKey/);
+  assert.match(migration, /create table public\.project_submission_keys/);
+  assert.match(
+    migration,
+    /primary key \(owner_profile_id, submission_key\)/,
+  );
+  assert.match(migration, /enable row level security/);
+  assert.match(
+    migration,
+    /revoke all on table public\.project_submission_keys from anon, authenticated/,
+  );
+  assert.match(
+    migration,
+    /on conflict \(owner_profile_id, submission_key\) do nothing/,
+  );
+  assert.match(migration, /return v_project_id/);
+});
+
+test("Project一覧は全ての並び替え条件をサーバー側で処理する", async () => {
+  const projects = await readFile(new URL("lib/projects.ts", root), "utf8");
+
+  assert.match(projects, /case "updated-asc"/);
+  assert.match(projects, /case "beyond-desc"/);
+  assert.match(projects, /case "continuation-desc"/);
+  assert.match(projects, /return \[\.\.\.projects\]\.sort/);
+});
+
+test("Project検索Filterは狭い画面でControlをGrid内に収める", async () => {
+  const styles = await readFile(new URL("app/globals.css", root), "utf8");
+
+  assert.match(styles, /\.filter-panel > \* \{\s*min-width: 0;/);
+  assert.match(
+    styles,
+    /\.filter-panel input,\s*\.filter-panel select \{[^}]*max-width: 100%;[^}]*min-width: 0;[^}]*width: 100%;/s,
+  );
+  assert.match(
+    styles,
+    /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/,
+  );
+  assert.match(styles, /grid-template-columns: minmax\(0, 1fr\)/);
+});
+
 test("OAuthはPKCE callbackでセッションを交換する", async () => {
   const [form, callback, header] = await Promise.all([
     readFile(new URL("components/auth-form.tsx", root), "utf8"),

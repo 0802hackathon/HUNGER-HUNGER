@@ -1351,6 +1351,17 @@ textarea:focus-visible {
   padding: 20px;
 }
 
+.filter-panel > * {
+  min-width: 0;
+}
+
+.filter-panel input,
+.filter-panel select {
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
 .filter-panel label,
 .stack-form label,
 .form-section>label,
@@ -2758,7 +2769,7 @@ textarea {
   }
 
   .filter-panel {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .filter-panel .button {
@@ -2969,7 +2980,7 @@ textarea {
   }
 
   .filter-panel {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .filter-panel .button {

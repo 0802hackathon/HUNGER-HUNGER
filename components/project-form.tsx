@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 import { SearchCombobox } from "@/components/search-combobox";
@@ -14,6 +14,10 @@ import {
   LEARNING_TOPIC_OPTIONS,
   TECHNOLOGY_OPTIONS,
 } from "@/lib/technology-options";
+
+const SUBMISSION_KEY_STORAGE = "hunger-hunger:project-submission-key";
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function lines(value: FormDataEntryValue | null) {
   return String(value ?? "")
@@ -84,6 +88,8 @@ function ChecklistItem({
 
 export function ProjectForm() {
   const router = useRouter();
+  const submittingRef = useRef(false);
+  const submissionKeyRef = useRef<string | null>(null);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
   const [repositoryUrl, setRepositoryUrl] = useState("");
@@ -108,6 +114,38 @@ export function ProjectForm() {
     formChecks.secrets,
     formChecks.rights,
   ].filter(Boolean).length;
+
+  function getSubmissionKey() {
+    if (submissionKeyRef.current) return submissionKeyRef.current;
+
+    let storedKey: string | null = null;
+    try {
+      storedKey = window.sessionStorage.getItem(SUBMISSION_KEY_STORAGE);
+    } catch {
+      // The in-memory key still protects repeated submits in this page.
+    }
+
+    const submissionKey =
+      storedKey && UUID_PATTERN.test(storedKey)
+        ? storedKey
+        : window.crypto.randomUUID();
+    submissionKeyRef.current = submissionKey;
+    try {
+      window.sessionStorage.setItem(SUBMISSION_KEY_STORAGE, submissionKey);
+    } catch {
+      // Some browser privacy modes disable sessionStorage.
+    }
+    return submissionKey;
+  }
+
+  function clearSubmissionKey() {
+    submissionKeyRef.current = null;
+    try {
+      window.sessionStorage.removeItem(SUBMISSION_KEY_STORAGE);
+    } catch {
+      // Nothing else is required when sessionStorage is unavailable.
+    }
+  }
 
   useEffect(() => {
     const value = repositoryUrl.trim();
@@ -214,6 +252,7 @@ export function ProjectForm() {
   }
 
   function resetChecks() {
+    clearSubmissionKey();
     setRepositoryUrl("");
     setRuntimeRequirements("");
     setLockfileStatus("committed");
@@ -231,65 +270,66 @@ export function ProjectForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const supabase = await getBrowserSupabase();
-    if (!supabase) {
-      setMessage(
-        "Supabase未接続のため投稿は保存されません。.env.localを設定してください。",
-      );
-      return;
-    }
-
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      setMessage("投稿するにはログインしてください。");
-      return;
-    }
-
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setPending(true);
     setMessage("");
-    const payload = {
-      title: String(formData.get("title") ?? ""),
-      summary: String(formData.get("summary") ?? ""),
-      motivation: String(formData.get("motivation") ?? ""),
-      abandonmentReason: String(formData.get("abandonmentReason") ?? ""),
-      currentState: String(formData.get("currentState") ?? ""),
-      knownLimitations: String(formData.get("knownLimitations") ?? ""),
-      repositoryUrl: String(formData.get("repositoryUrl") ?? ""),
-      runtimeRequirements: String(
-        formData.get("runtimeRequirements") ?? "",
-      ),
-      packageManager: String(formData.get("packageManager") ?? ""),
-      installCommand: String(formData.get("installCommand") ?? ""),
-      lockfileStatus: String(formData.get("lockfileStatus") ?? ""),
-      setupInstructions: String(formData.get("setupInstructions") ?? ""),
-      dependencyNotes: String(formData.get("dependencyNotes") ?? ""),
-      testedEnvironment: String(formData.get("testedEnvironment") ?? ""),
-      defaultBranch: String(formData.get("defaultBranch") ?? ""),
-      lastTestedCommit: String(formData.get("lastTestedCommit") ?? ""),
-      difficulty: String(formData.get("difficulty") ?? ""),
-      recommendedSkillLevel: String(
-        formData.get("recommendedSkillLevel") ?? "",
-      ),
-      licenseIdentifier: String(formData.get("licenseIdentifier") ?? ""),
-      usageTerms: String(formData.get("usageTerms") ?? ""),
-      technologies: selectedOptions(
-        formData,
-        "technologies",
-        "customTechnologies",
-      ),
-      learnableTechnologies: selectedOptions(
-        formData,
-        "learnableTechnologies",
-        "customLearningTopics",
-      ),
-      implementedFeatures: lines(formData.get("implementedFeatures")),
-      plannedFeatures: lines(formData.get("plannedFeatures")),
-      rightsConfirmed: formData.get("rightsConfirmed") === "on",
-      secretsConfirmed: formData.get("secretsConfirmed") === "on",
-    };
 
     try {
+      const formData = new FormData(event.currentTarget);
+      const supabase = await getBrowserSupabase();
+      if (!supabase) {
+        setMessage(
+          "Supabase未接続のため投稿は保存されません。.env.localを設定してください。",
+        );
+        return;
+      }
+
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        setMessage("投稿するにはログインしてください。");
+        return;
+      }
+
+      const payload = {
+        submissionKey: getSubmissionKey(),
+        title: String(formData.get("title") ?? ""),
+        summary: String(formData.get("summary") ?? ""),
+        motivation: String(formData.get("motivation") ?? ""),
+        abandonmentReason: String(formData.get("abandonmentReason") ?? ""),
+        currentState: String(formData.get("currentState") ?? ""),
+        knownLimitations: String(formData.get("knownLimitations") ?? ""),
+        repositoryUrl: String(formData.get("repositoryUrl") ?? ""),
+        runtimeRequirements: String(
+          formData.get("runtimeRequirements") ?? "",
+        ),
+        packageManager: String(formData.get("packageManager") ?? ""),
+        installCommand: String(formData.get("installCommand") ?? ""),
+        lockfileStatus: String(formData.get("lockfileStatus") ?? ""),
+        setupInstructions: String(formData.get("setupInstructions") ?? ""),
+        dependencyNotes: String(formData.get("dependencyNotes") ?? ""),
+        testedEnvironment: String(formData.get("testedEnvironment") ?? ""),
+        defaultBranch: String(formData.get("defaultBranch") ?? ""),
+        lastTestedCommit: String(formData.get("lastTestedCommit") ?? ""),
+        difficulty: String(formData.get("difficulty") ?? ""),
+        licenseIdentifier: String(formData.get("licenseIdentifier") ?? ""),
+        usageTerms: String(formData.get("usageTerms") ?? ""),
+        technologies: selectedOptions(
+          formData,
+          "technologies",
+          "customTechnologies",
+        ),
+        learnableTechnologies: selectedOptions(
+          formData,
+          "learnableTechnologies",
+          "customLearningTopics",
+        ),
+        implementedFeatures: lines(formData.get("implementedFeatures")),
+        plannedFeatures: lines(formData.get("plannedFeatures")),
+        rightsConfirmed: formData.get("rightsConfirmed") === "on",
+        secretsConfirmed: formData.get("secretsConfirmed") === "on",
+      };
+
       const response = await fetch("/api/projects", {
         method: "POST",
         headers: {
@@ -306,11 +346,13 @@ export function ProjectForm() {
         setMessage(result.message ?? "投稿を保存できませんでした。");
         return;
       }
+      clearSubmissionKey();
       router.push(`/projects/${result.id}`);
       router.refresh();
     } catch {
       setMessage("投稿を保存できませんでした。通信状態を確認してください。");
     } finally {
+      submittingRef.current = false;
       setPending(false);
     }
   }
