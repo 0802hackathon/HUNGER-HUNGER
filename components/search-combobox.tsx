@@ -52,7 +52,11 @@ export function SearchCombobox({
 
   const results = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase("ja");
-    if (!normalizedQuery) return [];
+
+    // 空欄なら全候補を表示
+    if (!normalizedQuery) {
+      return options.slice(0, 8);
+    }
 
     return options
       .filter((option) =>
@@ -111,13 +115,15 @@ export function SearchCombobox({
         required={required}
         value={query}
         onChange={(event) => {
-          setQuery(event.target.value);
+          const value = event.target.value;
+
+          setQuery(value);
           setSelectedValue("");
           onValueChange?.("");
-          setOpen(Boolean(event.target.value.trim()));
+          setOpen(true);
           setActiveIndex(-1);
         }}
-        onFocus={() => setOpen(Boolean(query.trim()))}
+        onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
         onBlur={() => {
           window.setTimeout(() => {
