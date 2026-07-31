@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
+import { SearchCombobox } from "@/components/search-combobox";
+import {
+  PACKAGE_MANAGER_OPTIONS,
+  RUNTIME_OPTIONS,
+  TESTED_ENVIRONMENT_OPTIONS,
+} from "@/lib/environment-options";
 import {
   LEARNING_TOPIC_OPTIONS,
   TECHNOLOGY_OPTIONS,
@@ -286,17 +292,19 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>Runtime・Version</span>
-              <input
+              <SearchCombobox
                 name="runtimeRequirements"
-                placeholder="Node.js 22.x / Python 3.12"
+                options={RUNTIME_OPTIONS}
+                placeholder="候補を検索"
                 required
               />
             </label>
             <label>
               <span>Package Manager・Version</span>
-              <input
+              <SearchCombobox
                 name="packageManager"
-                placeholder="pnpm 10 / uv 0.8"
+                options={PACKAGE_MANAGER_OPTIONS}
+                placeholder="候補を検索"
                 required
               />
             </label>
@@ -319,9 +327,10 @@ export function ProjectForm() {
             </label>
             <label>
               <span>動作確認環境</span>
-              <input
+              <SearchCombobox
                 name="testedEnvironment"
-                placeholder="Windows 11 / macOS 15 / Ubuntu 24.04"
+                options={TESTED_ENVIRONMENT_OPTIONS}
+                placeholder="候補を検索"
                 required
               />
             </label>
@@ -413,6 +422,7 @@ export function ProjectForm() {
             <span className="status-dot" />
             公開前の最終確認
           </div>
+
           <ul className="check-list">
             <li>Repositoryは公開されていますか</li>
             <li>RuntimeとLockfileを明記しましたか</li>
@@ -420,6 +430,7 @@ export function ProjectForm() {
             <li>秘密情報を削除しましたか</li>
             <li>所有権は移転しないと理解していますか</li>
           </ul>
+
           <button
             className="button button-primary button-block"
             disabled={pending}
@@ -427,6 +438,7 @@ export function ProjectForm() {
           >
             {pending ? "公開中…" : "プロジェクトを公開"}
           </button>
+
           {message && (
             <p className="form-message" role="status">
               {message}
