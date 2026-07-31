@@ -59,16 +59,18 @@ pnpm dev
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+GITHUB_TOKEN=
 ```
 
 読み取り画面だけを確認する場合、Supabaseの2項目は空のまま使用できます。
 Supabaseへ接続する場合は実際のProject URLとPublishable Keyを設定してください。
 Service Role Keyは使用せず、ブラウザとRoute Handlerの双方をRLSで保護します。
+`GITHUB_TOKEN` は公開Repositoryの確認に使う任意のFine-grained tokenです。未設定時はGitHub APIの未認証レート制限が適用されます。
 
 ## Supabaseセットアップ
 
 1. Supabaseで新しいProjectを作成します。
-2. SQL EditorまたはSupabase CLIで `supabase/migrations/202607290001_initial_schema.sql` を適用します。
+2. SQL EditorまたはSupabase CLIで `supabase/migrations/` 内のSQLをファイル名順に適用します。既存Projectでは未適用のMigrationだけを適用してください。
 3. AuthenticationのEmail providerを有効化します。
 4. Authentication → URL ConfigurationでSite URLを設定します。
 5. Redirect URLに次を追加します。

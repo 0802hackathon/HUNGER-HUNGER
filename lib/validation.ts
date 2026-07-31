@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseGitHubRepositoryUrl } from "@/lib/github-url";
 
 const safeUrl = z
   .url("有効なURLを入力してください")
@@ -11,6 +12,7 @@ const safeUrl = z
   }, "認証情報を含むURLは登録できません");
 
 export const projectInputSchema = z.object({
+  submissionKey: z.uuid("投稿識別子の形式が正しくありません"),
   title: z.string().trim().min(3).max(80),
   summary: z.string().trim().min(20).max(240),
   motivation: z.string().trim().min(20).max(2000),
@@ -18,8 +20,8 @@ export const projectInputSchema = z.object({
   currentState: z.string().trim().min(20).max(3000),
   knownLimitations: z.string().trim().min(10).max(3000),
   repositoryUrl: safeUrl.refine(
-    (value) => new URL(value).hostname === "github.com",
-    "MVPではGitHubの公開Repositoryだけ登録できます",
+    (value) => parseGitHubRepositoryUrl(value) !== null,
+    "https://github.com/owner/repository 形式で入力してください",
   ),
   runtimeRequirements: z.string().trim().min(3).max(300),
   packageManager: z.string().trim().min(2).max(80),
@@ -52,7 +54,6 @@ export const projectInputSchema = z.object({
     ])
     .optional(),
   difficulty: z.enum(["beginner", "intermediate", "advanced", "expert"]),
-  recommendedSkillLevel: z.enum(["beginner", "intermediate", "advanced"]),
   licenseIdentifier: z.string().trim().min(2).max(80),
   usageTerms: z.string().trim().min(20).max(2000),
   technologies: z.array(z.string().trim().min(1).max(50)).min(1).max(15),
