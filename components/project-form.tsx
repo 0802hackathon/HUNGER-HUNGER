@@ -413,6 +413,7 @@ export function ProjectForm() {
             <span className="status-dot" />
             公開前の最終確認
           </div>
+
           <ul className="check-list">
             <li>Repositoryは公開されていますか</li>
             <li>RuntimeとLockfileを明記しましたか</li>
@@ -420,6 +421,7 @@ export function ProjectForm() {
             <li>秘密情報を削除しましたか</li>
             <li>所有権は移転しないと理解していますか</li>
           </ul>
+
           <button
             className="button button-primary button-block"
             disabled={pending}
@@ -427,6 +429,7 @@ export function ProjectForm() {
           >
             {pending ? "公開中…" : "プロジェクトを公開"}
           </button>
+
           {message && (
             <p className="form-message" role="status">
               {message}
