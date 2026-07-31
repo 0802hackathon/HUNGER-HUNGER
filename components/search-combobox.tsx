@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -12,6 +13,7 @@ type Props = {
   name: string;
   options: readonly string[];
   defaultValue?: string;
+  onValueChange?: (value: string) => void;
   placeholder?: string;
   required?: boolean;
 };
@@ -20,6 +22,7 @@ export function SearchCombobox({
   name,
   options,
   defaultValue = "",
+  onValueChange,
   placeholder = "検索…",
   required = false,
 }: Props) {
@@ -30,6 +33,22 @@ export function SearchCombobox({
   const [selectedValue, setSelectedValue] = useState(defaultValue);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+
+  useEffect(() => {
+    const form = inputRef.current?.form;
+    if (!form) return;
+
+    function reset() {
+      setQuery(defaultValue);
+      setSelectedValue(defaultValue);
+      setOpen(false);
+      setActiveIndex(-1);
+      onValueChange?.(defaultValue);
+    }
+
+    form.addEventListener("reset", reset);
+    return () => form.removeEventListener("reset", reset);
+  }, [defaultValue, onValueChange]);
 
   const results = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase("ja");
@@ -49,6 +68,7 @@ export function SearchCombobox({
   function select(value: string) {
     setQuery(value);
     setSelectedValue(value);
+    onValueChange?.(value);
     setOpen(false);
     setActiveIndex(-1);
   }
@@ -98,8 +118,9 @@ export function SearchCombobox({
           const value = event.target.value;
 
           setQuery(value);
-          setSelectedValue(""); // まだ候補を選んでいない
-          setOpen(true);        // 常に候補を表示
+          setSelectedValue("");
+          onValueChange?.("");
+          setOpen(true);
           setActiveIndex(-1);
         }}
         onFocus={() => setOpen(true)}
@@ -114,6 +135,7 @@ export function SearchCombobox({
             if (exactMatch) {
               setQuery(exactMatch);
               setSelectedValue(exactMatch);
+              onValueChange?.(exactMatch);
             } else {
               setQuery(selectedValue);
             }

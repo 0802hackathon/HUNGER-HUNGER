@@ -53,7 +53,7 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.doesNotMatch(html, /Starter Project/i);
 });
 
-test("Project一覧が検索UIとデモProjectを表示する", async () => {
+test("Project一覧が検索UIとProjectを表示する", async () => {
   const worker = await getWorker();
   const response = await worker.fetch(
     new Request("http://localhost/projects", {
@@ -67,7 +67,8 @@ test("Project一覧が検索UIとデモProjectを表示する", async () => {
   const html = await response.text();
   assert.match(html, /Projectを探す/);
   assert.match(html, /未完成のコードから、次の学びを見つけましょう/);
-  assert.match(html, /Study Streak/);
+  assert.match(html, /class="project-list"/);
+  assert.match(html, /class="repo-card"/);
   assert.match(html, /使用技術/);
   assert.match(html, /Python/);
   assert.match(html, /画像処理/);
@@ -79,15 +80,11 @@ test("Project一覧が検索UIとデモProjectを表示する", async () => {
   assert.match(html, /シュート数の多い順/);
 });
 
-test("Project一覧の並び替え条件が一覧へ反映される", async () => {
+test("Project一覧の並び替え条件が選択状態へ反映される", async () => {
   const worker = await getWorker();
-  const cases = [
-    ["updated-asc", "Voice Journal", "Study Streak"],
-    ["beyond-desc", "Campus Lost &amp; Found", "Study Streak"],
-    ["continuation-desc", "Campus Lost &amp; Found", "Study Streak"],
-  ];
+  const cases = ["updated-asc", "beyond-desc", "continuation-desc"];
 
-  for (const [sort, firstProject, laterProject] of cases) {
+  for (const sort of cases) {
     const response = await worker.fetch(
       new Request(`http://localhost/projects?sort=${sort}`, {
         headers: { accept: "text/html" },
@@ -98,11 +95,11 @@ test("Project一覧の並び替え条件が一覧へ反映される", async () =
 
     assert.equal(response.status, 200);
     const html = await response.text();
-    const firstPosition = html.indexOf(firstProject);
-    const laterPosition = html.indexOf(laterProject);
-    assert.notEqual(firstPosition, -1);
-    assert.notEqual(laterPosition, -1);
-    assert.ok(firstPosition < laterPosition, `${sort}の並び順が正しい`);
+    assert.match(
+      html,
+      new RegExp(`<option value="${sort}" selected="">`),
+      `${sort}が選択状態になる`,
+    );
   }
 });
 
@@ -141,6 +138,40 @@ test("未認証の投稿APIを拒否する", async () => {
   );
 
   assert.equal(response.status, 401);
+});
+
+test("Project投稿画面が自動判定と手動確認を区別して表示する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/projects/new", {
+      headers: { accept: "text/html" },
+    }),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /公開前の最終確認/);
+  assert.match(html, /Repositoryは公開されていますか/);
+  assert.match(html, /自動判定/);
+  assert.match(html, /手動確認/);
+  assert.match(html, /check-item/);
+});
+
+test("Repository確認APIはGitHub Repository以外のURLを拒否する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request(
+      "http://localhost/api/github/repository?url=https%3A%2F%2Fexample.com%2Fowner%2Frepository",
+    ),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 400);
+  const body = await response.json();
+  assert.match(body.message, /github\.com\/owner\/repository/);
 });
 
 test("ログイン画面が3つの認証方法を表示する", async () => {

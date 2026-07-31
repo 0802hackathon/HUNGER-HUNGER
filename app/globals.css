@@ -1351,6 +1351,17 @@ textarea:focus-visible {
   padding: 20px;
 }
 
+.filter-panel > * {
+  min-width: 0;
+}
+
+.filter-panel input,
+.filter-panel select {
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
 .filter-panel label,
 .stack-form label,
 .form-section>label,
@@ -2255,19 +2266,100 @@ textarea {
   gap: 8px;
 }
 
+.status-row small {
+  color: var(--text-subtle);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  margin-left: auto;
+}
+
 .status-dot {
   background: #d4a72c;
   border-radius: 50%;
   height: 9px;
+  transition: background 0.2s ease;
   width: 9px;
 }
 
+.status-dot.is-complete {
+  background: var(--accent);
+}
+
 .check-list {
-  color: var(--text-muted);
-  font-size: 12px;
-  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
   margin: 18px 0;
-  padding-left: 18px;
+  padding: 0;
+}
+
+.check-item {
+  align-items: flex-start;
+  color: var(--text-muted);
+  display: flex;
+  gap: 9px;
+}
+
+.check-item-icon {
+  align-items: center;
+  border: 1px solid #afb8b1;
+  border-radius: 50%;
+  color: transparent;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 800;
+  height: 18px;
+  justify-content: center;
+  margin-top: 1px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  width: 18px;
+}
+
+.check-item.is-complete .check-item-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.check-item.is-checking .check-item-icon {
+  border-color: #d4a72c;
+  color: var(--warning);
+}
+
+.check-item-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.check-item-copy strong {
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.check-item-copy small {
+  color: var(--text-subtle);
+  font-size: 10px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.check-kind {
+  background: var(--surface-muted);
+  border: 1px solid var(--border-muted);
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  margin-right: 5px;
+  padding: 0 5px;
 }
 
 .form-shell {
@@ -2677,7 +2769,7 @@ textarea {
   }
 
   .filter-panel {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .filter-panel .button {
@@ -2888,7 +2980,7 @@ textarea {
   }
 
   .filter-panel {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .filter-panel .button {
