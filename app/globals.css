@@ -1740,6 +1740,7 @@ textarea {
 .planned-grid article {
   border: 1px solid var(--border);
   border-radius: 10px;
+  padding: 18px;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
@@ -1748,7 +1749,6 @@ textarea {
 .planned-grid article:hover {
   border-color: #aeb9b0;
   box-shadow: var(--shadow);
-  padding: 18px;
 }
 
 .planned-grid article>span {
