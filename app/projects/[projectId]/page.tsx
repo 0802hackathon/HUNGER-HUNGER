@@ -1,3 +1,4 @@
+import { ProjectTabs } from "@/components/project-tabs";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -62,18 +63,12 @@ export default async function ProjectDetailPage({
           </div>
         </div>
 
-        <nav className="repo-tabs" aria-label="Project内ナビゲーション">
-          <a aria-current="page" href="#overview">概要</a>
-          <a href="#environment">開発環境</a>
-          <a href="#implemented">実装済み</a>
-          <a href="#planned">構想</a>
-          <a href="#shoots">シュート <span>{continuations.length}</span></a>
-        </nav>
+        <ProjectTabs continuationCount={continuations.length} />
 
-        <div className="repo-content" id="overview">
+        <div className="repo-content">
           <div className="repo-main-column">
             <section className="readme-card">
-              <div className="readme-header">
+              <div className="readme-header" id="overview">
                 <span>README / HUNGER×HUNGER</span>
                 <span>更新 {new Date(project.updatedAt).toLocaleDateString("ja-JP")}</span>
               </div>
