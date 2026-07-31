@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseGitHubRepositoryUrl } from "@/lib/github-url";
 
 const safeUrl = z
   .url("有効なURLを入力してください")
@@ -18,8 +19,8 @@ export const projectInputSchema = z.object({
   currentState: z.string().trim().min(20).max(3000),
   knownLimitations: z.string().trim().min(10).max(3000),
   repositoryUrl: safeUrl.refine(
-    (value) => new URL(value).hostname === "github.com",
-    "MVPではGitHubの公開Repositoryだけ登録できます",
+    (value) => parseGitHubRepositoryUrl(value) !== null,
+    "https://github.com/owner/repository 形式で入力してください",
   ),
   runtimeRequirements: z.string().trim().min(3).max(300),
   packageManager: z.string().trim().min(2).max(80),

@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAuthenticatedClient } from "@/lib/api-auth";
+import {
+  getGitHubRepositoryStatus,
+  GitHubRepositoryLookupError,
+} from "@/lib/github-repository";
 import { projectInputSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
@@ -39,6 +43,31 @@ export async function POST(request: Request) {
         issues: parsed.error.flatten(),
       },
       { status: 400 },
+    );
+  }
+
+  try {
+    const repositoryStatus = await getGitHubRepositoryStatus(
+      parsed.data.repositoryUrl,
+    );
+    if (!repositoryStatus.isPublic) {
+      return NextResponse.json(
+        {
+          message:
+            "Repositoryを公開状態で確認できませんでした。URLと公開設定を確認してください。",
+        },
+        { status: 400 },
+      );
+    }
+  } catch (error) {
+    if (error instanceof GitHubRepositoryLookupError) {
+      return NextResponse.json({ message: error.message }, { status: 503 });
+    }
+
+    console.error("GitHub repository validation failed", error);
+    return NextResponse.json(
+      { message: "Repositoryの公開状態を確認できませんでした。" },
+      { status: 503 },
     );
   }
 

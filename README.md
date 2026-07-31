@@ -59,11 +59,13 @@ pnpm dev
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+GITHUB_TOKEN=
 ```
 
 読み取り画面だけを確認する場合、Supabaseの2項目は空のまま使用できます。
 Supabaseへ接続する場合は実際のProject URLとPublishable Keyを設定してください。
 Service Role Keyは使用せず、ブラウザとRoute Handlerの双方をRLSで保護します。
+`GITHUB_TOKEN` は公開Repositoryの確認に使う任意のFine-grained tokenです。未設定時はGitHub APIの未認証レート制限が適用されます。
 
 ## Supabaseセットアップ
 

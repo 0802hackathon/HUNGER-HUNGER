@@ -38,10 +38,44 @@ test("所有権・進捗・権利確認をRLSとDB関数で保護する", async 
 });
 
 test("外部URLはHTTPSかつ認証情報なしに限定する", async () => {
-  const validation = await readFile(new URL("lib/validation.ts", root), "utf8");
+  const [validation, githubUrl] = await Promise.all([
+    readFile(new URL("lib/validation.ts", root), "utf8"),
+    readFile(new URL("lib/github-url.ts", root), "utf8"),
+  ]);
   assert.match(validation, /protocol === "https:"/);
   assert.match(validation, /!url\.username && !url\.password/);
-  assert.match(validation, /hostname === "github\.com"/);
+  assert.match(validation, /parseGitHubRepositoryUrl/);
+  assert.match(githubUrl, /url\.hostname !== "github\.com"/);
+  assert.match(githubUrl, /segments\.length !== 2/);
+});
+
+test("公開前チェックは入力とGitHub情報を再判定し、投稿時にも検証する", async () => {
+  const [form, combobox, lookup, lookupRoute, projectRoute, styles] =
+    await Promise.all([
+      readFile(new URL("components/project-form.tsx", root), "utf8"),
+      readFile(new URL("components/search-combobox.tsx", root), "utf8"),
+      readFile(new URL("lib/github-repository.ts", root), "utf8"),
+      readFile(new URL("app/api/github/repository/route.ts", root), "utf8"),
+      readFile(new URL("app/api/projects/route.ts", root), "utf8"),
+      readFile(new URL("app/globals.css", root), "utf8"),
+    ]);
+
+  assert.match(form, /onChange=\{updateChecks\}/);
+  assert.match(form, /onReset=\{resetChecks\}/);
+  assert.match(form, /onSubmit=\{submit\}/);
+  assert.match(form, /event\.preventDefault\(\)/);
+  assert.doesNotMatch(form, /action=\{submit\}/);
+  assert.match(form, /repositoryCheck\.status === "valid"/);
+  assert.match(form, /onValueChange=\{setRuntimeRequirements\}/);
+  assert.match(form, /type="自動判定"/);
+  assert.match(form, /type="手動確認"/);
+  assert.match(combobox, /onValueChange\?\.\(value\)/);
+  assert.match(combobox, /addEventListener\("reset", reset\)/);
+  assert.match(lookup, /api\.github\.com\/repos/);
+  assert.match(lookup, /data\.private/);
+  assert.match(lookupRoute, /getGitHubRepositoryStatus/);
+  assert.match(projectRoute, /await getGitHubRepositoryStatus/);
+  assert.match(styles, /\.check-item\.is-complete/);
 });
 
 test("OAuthはPKCE callbackでセッションを交換する", async () => {

@@ -143,6 +143,40 @@ test("未認証の投稿APIを拒否する", async () => {
   assert.equal(response.status, 401);
 });
 
+test("Project投稿画面が自動判定と手動確認を区別して表示する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/projects/new", {
+      headers: { accept: "text/html" },
+    }),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /公開前の最終確認/);
+  assert.match(html, /Repositoryは公開されていますか/);
+  assert.match(html, /自動判定/);
+  assert.match(html, /手動確認/);
+  assert.match(html, /check-item/);
+});
+
+test("Repository確認APIはGitHub Repository以外のURLを拒否する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request(
+      "http://localhost/api/github/repository?url=https%3A%2F%2Fexample.com%2Fowner%2Frepository",
+    ),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 400);
+  const body = await response.json();
+  assert.match(body.message, /github\.com\/owner\/repository/);
+});
+
 test("ログイン画面が3つの認証方法を表示する", async () => {
   const worker = await getWorker();
   const response = await worker.fetch(
