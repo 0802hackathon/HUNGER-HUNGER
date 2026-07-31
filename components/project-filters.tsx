@@ -1,4 +1,5 @@
 import type { Difficulty } from "@/lib/types";
+import { SearchCombobox } from "@/components/search-combobox";
 
 type Props = {
   technologies: string[];
@@ -30,29 +31,22 @@ export function ProjectFilters({
 
       <label>
         <span>使用技術</span>
-        <select defaultValue={current.technology} name="technology">
-          <option value="">すべて</option>
-          {technologies.map((technology) => (
-            <option key={technology} value={technology}>
-              {technology}
-            </option>
-          ))}
-        </select>
+        <SearchCombobox
+            name="technology"
+            options={technologies}
+            placeholder="候補を検索"
+            defaultValue={current.technology}
+          />
       </label>
 
       <label>
         <span>学びたい技術</span>
-        <select
-          defaultValue={current.learningTechnology}
-          name="learningTechnology"
-        >
-          <option value="">すべて</option>
-          {learningTechnologies.map((technology) => (
-            <option key={technology} value={technology}>
-              {technology}
-            </option>
-          ))}
-        </select>
+          <SearchCombobox
+            name="learningTechnology"
+            options={learningTechnologies}
+            placeholder="候補を検索"
+            defaultValue={current.learningTechnology}
+          />
       </label>
 
       <label>
