@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
+import { SearchCombobox } from "@/components/search-combobox";
+import {
+  PACKAGE_MANAGER_OPTIONS,
+  RUNTIME_OPTIONS,
+  TESTED_ENVIRONMENT_OPTIONS,
+} from "@/lib/environment-options";
 import {
   LEARNING_TOPIC_OPTIONS,
   TECHNOLOGY_OPTIONS,
@@ -286,17 +292,19 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>Runtime・Version</span>
-              <input
+              <SearchCombobox
                 name="runtimeRequirements"
-                placeholder="Node.js 22.x / Python 3.12"
+                options={RUNTIME_OPTIONS}
+                placeholder="候補を検索"
                 required
               />
             </label>
             <label>
               <span>Package Manager・Version</span>
-              <input
+              <SearchCombobox
                 name="packageManager"
-                placeholder="pnpm 10 / uv 0.8"
+                options={PACKAGE_MANAGER_OPTIONS}
+                placeholder="候補を検索"
                 required
               />
             </label>
@@ -319,9 +327,10 @@ export function ProjectForm() {
             </label>
             <label>
               <span>動作確認環境</span>
-              <input
+              <SearchCombobox
                 name="testedEnvironment"
-                placeholder="Windows 11 / macOS 15 / Ubuntu 24.04"
+                options={TESTED_ENVIRONMENT_OPTIONS}
+                placeholder="候補を検索"
                 required
               />
             </label>
