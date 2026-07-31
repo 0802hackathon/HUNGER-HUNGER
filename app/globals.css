@@ -2275,6 +2275,18 @@ textarea {
   font-size: 15px;
 }
 
+.provider-logo {
+  display: block;
+  height: 18px;
+  width: 18px;
+}
+
+.provider-github .provider-logo {
+  filter: invert(1);
+  height: 19px;
+  width: 19px;
+}
+
 .auth-divider {
   align-items: center;
   color: var(--text-subtle);
