@@ -266,14 +266,6 @@ export function ProjectForm() {
                 <option value="expert">危険度 A・熟練</option>
               </select>
             </label>
-            <label>
-              <span>推奨スキルレベル</span>
-              <select defaultValue="beginner" name="recommendedSkillLevel">
-                <option value="beginner">入門</option>
-                <option value="intermediate">中級</option>
-                <option value="advanced">上級</option>
-              </select>
-            </label>
           </div>
         </section>
 
