@@ -1527,6 +1527,14 @@ textarea {
   padding: 2px 6px;
 }
 
+#overview,
+#environment,
+#implemented,
+#planned,
+#shoots {
+  scroll-margin-top: 140px;
+}
+
 .repo-content {
   display: grid;
   gap: 28px;
