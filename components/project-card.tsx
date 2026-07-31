@@ -25,6 +25,12 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article className="repo-card">
+      <Link
+        className="repo-card-link"
+        href={`/projects/${project.id}`}
+        aria-label={`${project.title}の詳細を見る`}
+      />
+
       <div className="repo-card-main">
         <div className="repo-card-heading">
           <div>
@@ -32,9 +38,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <span aria-hidden="true" />
               PUBLIC PROJECT · {project.ownerName}
             </div>
-            <h2>
-              <Link href={`/projects/${project.id}`}>{project.title}</Link>
-            </h2>
+            <h2>{project.title}</h2>
           </div>
           <span className={`difficulty difficulty-${project.difficulty}`}>
             {difficultyLabel[project.difficulty]}
@@ -80,10 +84,10 @@ export function ProjectCard({ project }: { project: Project }) {
             </li>
           ))}
         </ul>
-        <Link className="text-link" href={`/projects/${project.id}`}>
+        <div className="text-link" aria-hidden="true">
           <span>構想とコードを見る</span>
-          <span aria-hidden="true">→</span>
-        </Link>
+          <span>→</span>
+        </div>
       </div>
     </article>
   );
