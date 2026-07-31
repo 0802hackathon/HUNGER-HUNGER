@@ -125,6 +125,8 @@ test("ログイン画面が3つの認証方法を表示する", async () => {
   const html = await response.text();
   assert.match(html, /GitHubアカウントでログイン/);
   assert.match(html, /Googleでログイン/);
+  assert.match(html, /GitHub_Invertocat_Black\.svg/);
+  assert.match(html, /google-color\.svg/);
   assert.match(html, /その他メールアドレスでログイン/);
   assert.doesNotMatch(html, /Appleアカウントでログイン/);
   assert.doesNotMatch(html, /CONTINUE THE UNFINISHED|ビヨンド履歴を残す/);

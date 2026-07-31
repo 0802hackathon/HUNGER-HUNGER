@@ -1,19 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { Provider } from "@supabase/supabase-js";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 
 type SocialProvider = {
   id: Extract<Provider, "github" | "google">;
+  icon: string;
   label: string;
-  mark: string;
 };
 
 const socialProviders: SocialProvider[] = [
-  { id: "github", label: "GitHubアカウントでログイン", mark: "<>" },
-  { id: "google", label: "Googleでログイン", mark: "G" },
+  {
+    id: "github",
+    icon: "/icons/GitHub_Invertocat_Black.svg",
+    label: "GitHubアカウントでログイン",
+  },
+  {
+    id: "google",
+    icon: "/icons/google-color.svg",
+    label: "Googleでログイン",
+  },
 ];
 
 export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
@@ -110,7 +119,14 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
             type="button"
           >
             <span className="provider-mark" aria-hidden="true">
-              {provider.mark}
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="provider-logo"
+                height={19}
+                src={provider.icon}
+                width={19}
+              />
             </span>
             <span>
               {pending === provider.id ? "接続中…" : provider.label}
