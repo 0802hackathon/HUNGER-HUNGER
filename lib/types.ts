@@ -1,5 +1,10 @@
 export type ProjectStatus = "draft" | "published" | "completed" | "archived";
 export type Difficulty = "beginner" | "intermediate" | "advanced" | "expert";
+export type ProjectSort =
+  | "updated-desc"
+  | "updated-asc"
+  | "beyond-desc"
+  | "continuation-desc";
 export type SkillLevel = "beginner" | "intermediate" | "advanced";
 export type ExplorationStatus = "active" | "paused" | "completed";
 export type LockfileStatus =

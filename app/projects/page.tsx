@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ProjectCard } from "@/components/project-card";
 import { ProjectFilters } from "@/components/project-filters";
+import { ProjectSortSelect } from "@/components/project-sort";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -9,8 +10,9 @@ import {
   getLearningTechnologyOptions,
   getTechnologyOptions,
   listProjects,
+  sortProjects,
 } from "@/lib/projects";
-import type { Difficulty } from "@/lib/types";
+import type { Difficulty, ProjectSort } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Projectを探す",
@@ -22,7 +24,15 @@ type SearchParams = Promise<{
   technology?: string;
   learningTechnology?: string;
   difficulty?: string;
+  sort?: string;
 }>;
+
+const projectSorts: ProjectSort[] = [
+  "updated-desc",
+  "updated-asc",
+  "beyond-desc",
+  "continuation-desc",
+];
 
 export default async function ProjectsPage({
   searchParams,
@@ -37,7 +47,15 @@ export default async function ProjectsPage({
     learningTechnology: params.learningTechnology,
     difficulty: (params.difficulty ?? "") as Difficulty | "",
   };
-  const projects = filterProjects(allProjects, current);
+  const currentSort: ProjectSort = projectSorts.includes(
+    params.sort as ProjectSort,
+  )
+    ? (params.sort as ProjectSort)
+    : "updated-desc";
+  const projects = sortProjects(
+    filterProjects(allProjects, current),
+    currentSort,
+  );
 
   return (
     <>
@@ -62,7 +80,7 @@ export default async function ProjectsPage({
 
         <div className="result-heading">
           <strong>{projects.length}件のProject</strong>
-          <span>更新日の新しい順</span>
+          <ProjectSortSelect current={currentSort} />
         </div>
 
         {projects.length ? (

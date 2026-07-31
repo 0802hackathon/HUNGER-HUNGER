@@ -1396,9 +1396,23 @@ textarea {
   padding: 0 4px 12px;
 }
 
-.result-heading span {
+.project-sort select {
+  background-color: transparent;
+  border-color: transparent;
   color: var(--text-subtle);
+  cursor: pointer;
   font-size: 12px;
+  font-weight: 600;
+  padding: 6px 28px 6px 8px;
+}
+
+.project-sort select:hover {
+  background-color: var(--surface);
+  border-color: var(--border);
+}
+
+.project-sort select:focus {
+  background-color: var(--surface);
 }
 
 .empty-state {
