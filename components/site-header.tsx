@@ -40,28 +40,11 @@ export function SiteHeader() {
       syncUser(data.user);
     }
     void loadUser();
-
-    const openProjectSearch = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      const isTyping =
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
-        target?.tagName === "SELECT" ||
-        target?.isContentEditable;
-
-      if (event.key === "/" && !isTyping && !event.metaKey && !event.ctrlKey) {
-        event.preventDefault();
-        router.push("/projects");
-      }
-    };
-
-    window.addEventListener("keydown", openProjectSearch);
     return () => {
       cancelled = true;
       unsubscribeAuth?.();
-      window.removeEventListener("keydown", openProjectSearch);
     };
-  }, [router]);
+  }, []);
 
   async function logout() {
     const supabase = await getBrowserSupabase();
@@ -101,15 +84,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="header-actions">
-          <Link
-            aria-label="Projectを検索する。スラッシュキーでも開けます"
-            className="header-search"
-            href="/projects"
-          >
-            <span aria-hidden="true">⌕</span>
-            <span>プロジェクトを探す</span>
-            <kbd>/</kbd>
-          </Link>
           <Link className="button button-ghost-dark" href="/projects/new">
             投稿する
           </Link>
