@@ -111,7 +111,7 @@ test("未認証の投稿APIを拒否する", async () => {
   assert.equal(response.status, 401);
 });
 
-test("ログイン画面が4つの認証方法を表示する", async () => {
+test("ログイン画面が3つの認証方法を表示する", async () => {
   const worker = await getWorker();
   const response = await worker.fetch(
     new Request("http://localhost/login", {
@@ -125,8 +125,8 @@ test("ログイン画面が4つの認証方法を表示する", async () => {
   const html = await response.text();
   assert.match(html, /GitHubアカウントでログイン/);
   assert.match(html, /Googleでログイン/);
-  assert.match(html, /Appleアカウントでログイン/);
   assert.match(html, /その他メールアドレスでログイン/);
+  assert.doesNotMatch(html, /Appleアカウントでログイン/);
   assert.doesNotMatch(html, /CONTINUE THE UNFINISHED|ビヨンド履歴を残す/);
   assert.doesNotMatch(html, /各認証Providerから共有される基本プロフィール情報/);
 });

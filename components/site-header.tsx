@@ -3,26 +3,41 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 
 export function SiteHeader() {
   const [displayName, setDisplayName] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [logoutPending, setLogoutPending] = useState(false);
+  const [logoutFailed, setLogoutFailed] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     let cancelled = false;
+    let unsubscribeAuth: (() => void) | undefined;
 
     async function loadUser() {
       const supabase = await getBrowserSupabase();
       if (!supabase || cancelled) return;
-      const { data } = await supabase.auth.getUser();
-      if (!cancelled) {
+
+      const syncUser = (user: User | null) => {
+        if (cancelled) return;
+        setIsAuthenticated(Boolean(user));
         setDisplayName(
-          data.user?.user_metadata?.display_name ??
-            data.user?.email?.split("@")[0] ??
+          user?.user_metadata?.display_name ??
+            user?.email?.split("@")[0] ??
             null,
         );
-      }
+      };
+
+      const { data: authListener } = supabase.auth.onAuthStateChange(
+        (_event, session) => syncUser(session?.user ?? null),
+      );
+      unsubscribeAuth = () => authListener.subscription.unsubscribe();
+
+      const { data } = await supabase.auth.getUser();
+      syncUser(data.user);
     }
     void loadUser();
 
@@ -43,9 +58,29 @@ export function SiteHeader() {
     window.addEventListener("keydown", openProjectSearch);
     return () => {
       cancelled = true;
+      unsubscribeAuth?.();
       window.removeEventListener("keydown", openProjectSearch);
     };
   }, [router]);
+
+  async function logout() {
+    const supabase = await getBrowserSupabase();
+    if (!supabase) return;
+
+    setLogoutPending(true);
+    setLogoutFailed(false);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      setLogoutPending(false);
+      setLogoutFailed(true);
+      return;
+    }
+
+    setIsAuthenticated(false);
+    setDisplayName(null);
+    router.replace("/");
+    router.refresh();
+  }
 
   return (
     <header className="site-header">
@@ -81,10 +116,24 @@ export function SiteHeader() {
           <Link
             aria-label={displayName ? `${displayName}のダッシュボード` : "ログイン"}
             className="avatar-link"
-            href={displayName ? "/dashboard" : "/login"}
+            href={isAuthenticated ? "/dashboard" : "/login"}
           >
             <span className="desktop-only">{displayName ?? "ログイン"}</span>
           </Link>
+          {isAuthenticated && (
+            <button
+              className="button button-ghost-dark header-logout-button"
+              disabled={logoutPending}
+              onClick={logout}
+              type="button"
+            >
+              {logoutPending
+                ? "ログアウト中…"
+                : logoutFailed
+                  ? "ログアウトを再試行"
+                  : "ログアウト"}
+            </button>
+          )}
         </div>
       </div>
     </header>
