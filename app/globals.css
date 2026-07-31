@@ -229,6 +229,12 @@ textarea:focus-visible {
   gap: 8px;
 }
 
+.header-logout-button {
+  font-size: 12px;
+  min-height: 32px;
+  padding: 5px 10px;
+}
+
 .avatar {
   align-items: center;
   background: #1d2821;
@@ -2269,10 +2275,6 @@ textarea {
   font-size: 15px;
 }
 
-.provider-apple .provider-mark {
-  font-size: 11px;
-}
-
 .auth-divider {
   align-items: center;
   color: var(--text-subtle);
@@ -2707,6 +2709,10 @@ textarea {
 
   .header-actions>.button {
     display: none;
+  }
+
+  .header-actions>.header-logout-button {
+    display: inline-flex;
   }
 
   .hero h1 {

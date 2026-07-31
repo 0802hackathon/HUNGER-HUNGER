@@ -82,11 +82,10 @@ https://hunger-hunger-mvp.shuta-akiyoshi.chatgpt.site/auth/callback
 
 ### ログインProvider
 
-ログイン画面は次の4方式に対応しています。
+ログイン画面は次の3方式に対応しています。
 
 - GitHubアカウント
 - Google
-- Appleアカウント
 - メールアドレスとパスワード
 
 OAuth Providerを利用するには、Supabase DashboardのAuthentication → Sign In
@@ -110,13 +109,6 @@ https://<project-ref>.supabase.co/auth/v1/callback
 2. Authorized JavaScript originsにローカルURLと本番サイトURLを追加します。
 3. Authorized redirect URIsにSupabaseのCallback URLを設定します。
 4. Client IDとClient SecretをSupabaseのGoogle Providerへ登録します。
-
-#### Apple
-
-1. Apple DeveloperでSign in with Apple対応のApp IDとServices IDを作成します。
-2. Services IDのWebsite URLにSupabase ProjectのDomain、Return URLにSupabaseのCallback URLを設定します。
-3. Team ID、Services ID、Signing Keyから作成したSecretをSupabaseのApple Providerへ登録します。
-4. Apple OAuthのSecretは6か月ごとのローテーションが必要です。
 
 現在のSitesデプロイは所有者限定です。外部ユーザーにこれらのログイン方法を提供する場合は、
 Sitesのアクセス設定をPublicへ変更する必要があります。

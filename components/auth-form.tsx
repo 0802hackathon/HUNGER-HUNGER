@@ -6,7 +6,7 @@ import type { Provider } from "@supabase/supabase-js";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 
 type SocialProvider = {
-  id: Extract<Provider, "github" | "google" | "apple">;
+  id: Extract<Provider, "github" | "google">;
   label: string;
   mark: string;
 };
@@ -14,7 +14,6 @@ type SocialProvider = {
 const socialProviders: SocialProvider[] = [
   { id: "github", label: "GitHubアカウントでログイン", mark: "<>" },
   { id: "google", label: "Googleでログイン", mark: "G" },
-  { id: "apple", label: "Appleアカウントでログイン", mark: "●" },
 ];
 
 export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
@@ -43,7 +42,6 @@ export function AuthForm({ initialMessage = "" }: { initialMessage?: string }) {
       provider: provider.id,
       options: {
         redirectTo: callbackUrl(),
-        scopes: provider.id === "apple" ? "name email" : undefined,
       },
     });
 
