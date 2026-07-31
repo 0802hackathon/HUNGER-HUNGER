@@ -83,9 +83,6 @@ export function SiteHeader() {
             className="avatar-link"
             href={displayName ? "/dashboard" : "/login"}
           >
-            <span className="avatar" aria-hidden="true">
-              {(displayName ?? "?").slice(0, 1).toUpperCase()}
-            </span>
             <span className="desktop-only">{displayName ?? "ログイン"}</span>
           </Link>
         </div>
