@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 
 export function SiteHeader() {
   const [displayName, setDisplayName] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     let cancelled = false;
@@ -19,33 +17,16 @@ export function SiteHeader() {
       if (!cancelled) {
         setDisplayName(
           data.user?.user_metadata?.display_name ??
-            data.user?.email?.split("@")[0] ??
-            null,
+          data.user?.email?.split("@")[0] ??
+          null,
         );
       }
     }
     void loadUser();
-
-    const openProjectSearch = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      const isTyping =
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
-        target?.tagName === "SELECT" ||
-        target?.isContentEditable;
-
-      if (event.key === "/" && !isTyping && !event.metaKey && !event.ctrlKey) {
-        event.preventDefault();
-        router.push("/projects");
-      }
-    };
-
-    window.addEventListener("keydown", openProjectSearch);
     return () => {
       cancelled = true;
-      window.removeEventListener("keydown", openProjectSearch);
     };
-  }, [router]);
+  }, []);
 
   return (
     <header className="site-header">
@@ -66,15 +47,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="header-actions">
-          <Link
-            aria-label="Projectを検索する。スラッシュキーでも開けます"
-            className="header-search"
-            href="/projects"
-          >
-            <span aria-hidden="true">⌕</span>
-            <span>プロジェクトを探す</span>
-            <kbd>/</kbd>
-          </Link>
           <Link className="button button-ghost-dark" href="/projects/new">
             投稿する
           </Link>
