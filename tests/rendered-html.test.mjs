@@ -78,6 +78,47 @@ test("Project一覧が検索UIとProjectを表示する", async () => {
   assert.match(html, /更新日の古い順/);
   assert.match(html, /ビヨンド数の多い順/);
   assert.match(html, /シュート数の多い順/);
+  assert.match(html, /12(?:<!-- -->)?件のProject/);
+  const documentHtml = html.split("</html>")[0];
+  assert.equal(documentHtml.match(/class="repo-card"/g)?.length, 12);
+  assert.match(html, /Accessible Reader/);
+  assert.match(html, /Sensor Garden/);
+  assert.match(html, /City Temperature Atlas/);
+});
+
+test("Project一覧を検索し、技術と難易度で絞り込める", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request(
+      "http://localhost/projects?technology=Python&difficulty=advanced",
+      {
+        headers: { accept: "text/html" },
+      },
+    ),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /2(?:<!-- -->)?件のProject/);
+  assert.match(html, /Receipt Lens/);
+  assert.match(html, /Subtitle Studio/);
+  assert.doesNotMatch(html, /City Temperature Atlas/);
+
+  const searchResponse = await worker.fetch(
+    new Request("http://localhost/projects?q=IoT", {
+      headers: { accept: "text/html" },
+    }),
+    env(),
+    context(),
+  );
+
+  assert.equal(searchResponse.status, 200);
+  const searchHtml = await searchResponse.text();
+  assert.match(searchHtml, /1(?:<!-- -->)?件のProject/);
+  assert.match(searchHtml, /Sensor Garden/);
+  assert.doesNotMatch(searchHtml, /Accessible Reader/);
 });
 
 test("Project一覧の並び替え条件が選択状態へ反映される", async () => {
@@ -133,6 +174,20 @@ test("未認証の投稿APIを拒否する", async () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({}),
     }),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 401);
+});
+
+test("未認証のProject削除APIを拒否する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request(
+      "http://localhost/api/projects/00000000-0000-4000-8000-000000000000",
+      { method: "DELETE" },
+    ),
     env(),
     context(),
   );

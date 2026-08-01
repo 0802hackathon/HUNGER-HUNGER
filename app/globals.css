@@ -3184,6 +3184,18 @@ textarea {
   font-size: 13px;
 }
 
+.owner-controls > .button + .button,
+.owner-controls > .status-label + .button {
+  margin-top: 10px;
+}
+
+.owner-controls > small {
+  color: var(--text-muted);
+  display: block;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
 @media (max-width: 600px) {
   .activity-actions {
     align-items: flex-start;

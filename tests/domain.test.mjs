@@ -132,6 +132,96 @@ test("公開データはRLSを通して読めるがテーブル書込権限を�
   assert.doesNotMatch(grants, /grant (?:insert|update|delete|all)/i);
 });
 
+test("Projectのアーカイブと削除は所有者検証済みDB関数だけを通す", async () => {
+  const [migration, route, controls, detail] = await Promise.all([
+    readFile(
+      new URL(
+        "supabase/migrations/202608010001_project_owner_management.sql",
+        root,
+      ),
+      "utf8",
+    ),
+    readFile(new URL("app/api/projects/[projectId]/route.ts", root), "utf8"),
+    readFile(new URL("components/owner-project-controls.tsx", root), "utf8"),
+    readFile(new URL("app/projects/[projectId]/page.tsx", root), "utf8"),
+  ]);
+
+  assert.match(migration, /archive_owned_project/);
+  assert.match(migration, /delete_owned_project/);
+  assert.match(migration, /owner_profile_id <> v_profile_id/);
+  assert.match(migration, /project has learning activity/);
+  assert.match(migration, /revoke update, delete on table public\.projects/);
+  assert.match(migration, /title like 'ああああ%'/);
+  assert.match(migration, /title like 'いいいいいいいい%'/);
+  assert.match(migration, /v_target_count <> 2/);
+  assert.match(route, /rpc\("archive_owned_project"/);
+  assert.match(route, /export async function DELETE/);
+  assert.match(route, /rpc\("delete_owned_project"/);
+  assert.match(controls, /method: "DELETE"/);
+  assert.match(controls, /enteredTitle\.trim\(\) !== projectTitle/);
+  assert.match(detail, /projectTitle=\{project\.title\}/);
+});
+
+test("サンプルProjectの管理状態はログインProfileごとに保存する", async () => {
+  const [migration, projects, route, controls, detail] = await Promise.all([
+    readFile(
+      new URL(
+        "supabase/migrations/202608010002_sample_project_management.sql",
+        root,
+      ),
+      "utf8",
+    ),
+    readFile(new URL("lib/projects.ts", root), "utf8"),
+    readFile(new URL("app/api/projects/[projectId]/route.ts", root), "utf8"),
+    readFile(new URL("components/owner-project-controls.tsx", root), "utf8"),
+    readFile(new URL("app/projects/[projectId]/page.tsx", root), "utf8"),
+  ]);
+
+  assert.match(
+    migration,
+    /create table if not exists public\.sample_project_preferences/,
+  );
+  assert.match(migration, /enable row level security/);
+  assert.match(migration, /profile_id = public\.current_profile_id\(\)/);
+  assert.match(migration, /archive_sample_project/);
+  assert.match(migration, /delete_sample_project/);
+  assert.match(migration, /revoke insert, update, delete/);
+  assert.match(projects, /getSampleProjectStates/);
+  assert.match(projects, /state === "deleted"/);
+  assert.match(projects, /status: "archived"/);
+  assert.match(route, /rpc\("archive_sample_project"/);
+  assert.match(route, /rpc\("delete_sample_project"/);
+  assert.match(controls, /sample[\s\S]*rpc\("current_profile_id"\)/);
+  assert.match(detail, /sample=\{isSampleProject\(project\.id\)\}/);
+});
+
+test("全Projectは作成者または明示された管理者が管理できる", async () => {
+  const [migration, controls, route] = await Promise.all([
+    readFile(
+      new URL(
+        "supabase/migrations/202608010003_project_management_grants.sql",
+        root,
+      ),
+      "utf8",
+    ),
+    readFile(new URL("components/owner-project-controls.tsx", root), "utf8"),
+    readFile(new URL("app/api/projects/[projectId]/route.ts", root), "utf8"),
+  ]);
+
+  assert.match(migration, /create table if not exists public\.project_management_grants/);
+  assert.match(migration, /project\.owner_profile_id = public\.current_profile_id\(\)/);
+  assert.match(migration, /management_grant\.manager_profile_id = public\.current_profile_id\(\)/);
+  assert.match(migration, /create or replace function public\.can_manage_project/);
+  assert.match(migration, /delete from public\.progress_updates/);
+  assert.match(migration, /delete from public\.learning_outcomes/);
+  assert.match(migration, /delete from public\.project_continuations/);
+  assert.match(migration, /delete from public\.project_explorations/);
+  assert.match(migration, /revoke insert, update, delete/);
+  assert.match(controls, /rpc\("can_manage_project"/);
+  assert.match(controls, /関連するビヨンド、進捗、学習成果、シュートも削除されます/);
+  assert.match(route, /project manager required/);
+});
+
 test("Project投稿は非公開の一意キーで冪等に作成される", async () => {
   const [form, validation, route, migration] = await Promise.all([
     readFile(new URL("components/project-form.tsx", root), "utf8"),
@@ -222,6 +312,23 @@ test("Supabase未接続のローカル環境はデモデータを使用する", 
   assert.match(config, /https:\/\/your-project\.supabase\.co/);
   assert.match(config, /sb_publishable_your_key/);
   assert.match(config, /return null/);
+});
+
+test("Supabase接続時も公開ProjectへサンプルProjectを追加する", async () => {
+  const projects = await readFile(
+    new URL("lib/projects.ts", root),
+    "utf8",
+  );
+
+  assert.match(projects, /function mergeWithSampleProjects/);
+  assert.match(
+    projects,
+    /mergeWithSampleProjects\(data\.map\(\(row\) => mapProject\(row\)\), sampleStates\)/,
+  );
+  assert.match(
+    projects,
+    /const sampleProject = sampleProjects\.find[\s\S]*state === "archived"[\s\S]*const client = publicClient\(\);/,
+  );
 });
 
 test("初期表示では認証SDKと画像Componentを読み込まない", async () => {

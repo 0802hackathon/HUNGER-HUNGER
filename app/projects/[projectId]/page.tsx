@@ -6,7 +6,11 @@ import { BeyondButton } from "@/components/beyond-button";
 import { OwnerProjectControls } from "@/components/owner-project-controls";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getProject, getProjectContinuations } from "@/lib/projects";
+import {
+  getProject,
+  getProjectContinuations,
+  isSampleProject,
+} from "@/lib/projects";
 import type { LockfileStatus } from "@/lib/types";
 
 type Params = Promise<{ projectId: string }>;
@@ -306,8 +310,9 @@ export default async function ProjectDetailPage({
 
             <OwnerProjectControls
               archived={isArchived}
-              ownerId={project.ownerId}
+              sample={isSampleProject(project.id)}
               projectId={project.id}
+              projectTitle={project.title}
             />
           </aside>
         </div>
