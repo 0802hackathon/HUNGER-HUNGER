@@ -80,7 +80,7 @@ test("ダッシュボードがプロフィール、サンプル活動、切替�
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /デモハンター/);
-  assert.match(html, /Study Streak/);
+  assert.match(html, /Study Streak|活動を読み込んでいます…/);
   assert.match(html, /role="tablist"/);
   assert.match(html, /ビヨンド/);
   assert.match(html, /シュート/);

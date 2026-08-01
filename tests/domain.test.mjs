@@ -299,6 +299,11 @@ test("OAuthはPKCE callbackでセッションを交換する", async () => {
   assert.match(callback, /!value\.startsWith\("\/\/"\)/);
   assert.match(header, /supabase\.auth\.signOut\(\)/);
   assert.match(header, /ログアウト/);
+  assert.match(header, /header-avatar/);
+  assert.match(header, /プロフィールを開く/);
+  assert.match(header, /user_metadata\?\.avatar_url/);
+  assert.match(header, /url\.protocol === "https:"/);
+  assert.doesNotMatch(header, /displayName/);
 });
 
 test("Supabase未接続のローカル環境はデモデータを使用する", async () => {
