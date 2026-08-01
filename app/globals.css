@@ -1400,6 +1400,29 @@ textarea {
   resize: vertical;
 }
 
+.character-count {
+  align-self: flex-end;
+  color: var(--text-subtle);
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.character-count.is-near-limit {
+  color: #9a6700;
+}
+
+.character-count.is-over-limit {
+  color: var(--danger, #cf222e);
+  font-weight: 700;
+}
+
+.search-combobox > .character-count {
+  margin-top: 7px;
+}
+
 .search-field {
   position: relative;
 }

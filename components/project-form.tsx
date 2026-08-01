@@ -4,6 +4,10 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 import { SearchCombobox } from "@/components/search-combobox";
+import {
+  CountedInput,
+  CountedTextarea,
+} from "@/components/character-count-field";
 import { parseGitHubRepositoryUrl } from "@/lib/github-url";
 import {
   PACKAGE_MANAGER_OPTIONS,
@@ -375,11 +379,11 @@ export function ProjectForm() {
           </div>
           <label>
             <span>タイトル</span>
-            <input maxLength={80} minLength={3} name="title" required />
+            <CountedInput maxLength={80} minLength={3} name="title" required />
           </label>
           <label>
             <span>一行説明</span>
-            <textarea
+            <CountedTextarea
               maxLength={240}
               minLength={20}
               name="summary"
@@ -389,7 +393,13 @@ export function ProjectForm() {
           </label>
           <label>
             <span>なぜ開発を始めたのか</span>
-            <textarea minLength={20} name="motivation" required rows={5} />
+            <CountedTextarea
+              maxLength={2000}
+              minLength={20}
+              name="motivation"
+              required
+              rows={5}
+            />
           </label>
         </section>
 
@@ -403,11 +413,18 @@ export function ProjectForm() {
           </div>
           <label>
             <span>現在の実装状況</span>
-            <textarea minLength={20} name="currentState" required rows={5} />
+            <CountedTextarea
+              maxLength={3000}
+              minLength={20}
+              name="currentState"
+              required
+              rows={5}
+            />
           </label>
           <label>
             <span>開発を断念した理由</span>
-            <textarea
+            <CountedTextarea
+              maxLength={2000}
               minLength={20}
               name="abandonmentReason"
               required
@@ -416,7 +433,8 @@ export function ProjectForm() {
           </label>
           <label>
             <span>既知の制約・不具合</span>
-            <textarea
+            <CountedTextarea
+              maxLength={3000}
               minLength={10}
               name="knownLimitations"
               required
@@ -436,16 +454,20 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>実装済み機能</span>
-              <textarea
+              <CountedTextarea
+                maxLength={120}
                 name="implementedFeatures"
+                perLine
                 placeholder={"メール認証\n学習記録の追加"}
                 rows={6}
               />
             </label>
             <label>
               <span>実装予定だった機能</span>
-              <textarea
+              <CountedTextarea
+                maxLength={120}
                 name="plannedFeatures"
+                perLine
                 placeholder={"タイムゾーン対応\n月次レポート"}
                 required
                 rows={6}
@@ -469,8 +491,10 @@ export function ProjectForm() {
             </div>
             <label className="custom-option-field">
               <span>その他（1行に1つ）</span>
-              <textarea
+              <CountedTextarea
+                maxLength={50}
                 name="customTechnologies"
+                perLine
                 placeholder={"OpenGL\nROS 2"}
                 rows={3}
               />
@@ -493,8 +517,10 @@ export function ProjectForm() {
             </div>
             <label className="custom-option-field">
               <span>その他（1行に1つ）</span>
-              <textarea
+              <CountedTextarea
+                maxLength={50}
                 name="customLearningTopics"
+                perLine
                 placeholder={"コンパイラ\nロボティクス"}
                 rows={3}
               />
@@ -529,6 +555,7 @@ export function ProjectForm() {
             <label>
               <span>Runtime・Version</span>
               <SearchCombobox
+                maxLength={300}
                 name="runtimeRequirements"
                 onValueChange={setRuntimeRequirements}
                 options={RUNTIME_OPTIONS}
@@ -539,6 +566,7 @@ export function ProjectForm() {
             <label>
               <span>Package Manager・Version</span>
               <SearchCombobox
+                maxLength={80}
                 name="packageManager"
                 options={PACKAGE_MANAGER_OPTIONS}
                 placeholder="候補を検索"
@@ -547,7 +575,8 @@ export function ProjectForm() {
             </label>
             <label>
               <span>Install Command</span>
-              <input
+              <CountedInput
+                maxLength={300}
                 name="installCommand"
                 placeholder="pnpm install --frozen-lockfile"
                 required
@@ -565,6 +594,7 @@ export function ProjectForm() {
             <label>
               <span>動作確認環境</span>
               <SearchCombobox
+                maxLength={500}
                 name="testedEnvironment"
                 options={TESTED_ENVIRONMENT_OPTIONS}
                 placeholder="候補を検索"
@@ -573,12 +603,17 @@ export function ProjectForm() {
             </label>
             <label>
               <span>Default Branch</span>
-              <input defaultValue="main" name="defaultBranch" required />
+              <CountedInput
+                defaultValue="main"
+                maxLength={100}
+                name="defaultBranch"
+                required
+              />
             </label>
           </div>
           <label>
             <span>最後に動作確認したCommit SHA（任意）</span>
-            <input
+            <CountedInput
               maxLength={64}
               minLength={7}
               name="lastTestedCommit"
@@ -587,7 +622,8 @@ export function ProjectForm() {
           </label>
           <label>
             <span>Setup手順</span>
-            <textarea
+            <CountedTextarea
+              maxLength={3000}
               minLength={20}
               name="setupInstructions"
               placeholder="環境変数の作成、Migration、起動までを順番に記載してください。"
@@ -597,7 +633,8 @@ export function ProjectForm() {
           </label>
           <label>
             <span>依存関係・互換性の注意</span>
-            <textarea
+            <CountedTextarea
+              maxLength={3000}
               minLength={10}
               name="dependencyNotes"
               placeholder="Version固定の理由、衝突しやすいModule、OS固有の制約を記載してください。"
@@ -617,7 +654,7 @@ export function ProjectForm() {
           </div>
           <label>
             <span>公開GitHub Repository URL</span>
-            <input
+            <CountedInput
               name="repositoryUrl"
               placeholder="https://github.com/owner/repository"
               required
@@ -627,7 +664,8 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>ライセンス</span>
-              <input
+              <CountedInput
+                maxLength={80}
                 name="licenseIdentifier"
                 placeholder="MIT / Apache-2.0"
                 required
@@ -636,7 +674,13 @@ export function ProjectForm() {
           </div>
           <label>
             <span>学習・改変・成果公開の利用条件</span>
-            <textarea minLength={20} name="usageTerms" required rows={5} />
+            <CountedTextarea
+              maxLength={2000}
+              minLength={20}
+              name="usageTerms"
+              required
+              rows={5}
+            />
           </label>
           <label className="check-row">
             <input name="rightsConfirmed" required type="checkbox" />
