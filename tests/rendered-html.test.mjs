@@ -46,6 +46,7 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.match(html, /work-in-progress\.c/);
   assert.match(html, /TODO: replace the temporary implementation/);
   assert.match(html, /FIXME: add the recovery path/);
+  assert.match(html, /class="code-caret"/);
   assert.match(html, /識別情報を一般化した開発途中コードの例/);
   assert.doesNotMatch(html, /zii\/netscape|jsStubs\.c|NPL 1\.0|IN PROGRESS/);
   assert.match(html, /windows-controls/);
@@ -124,6 +125,20 @@ test("Project一覧が検索UIとProjectを表示する", async () => {
   assert.match(html, /Accessible Reader/);
   assert.match(html, /Sensor Garden/);
   assert.match(html, /City Temperature Atlas/);
+  const normalizedHtml = html.replaceAll("<!-- -->", "");
+  assert.match(
+    normalizedHtml,
+    /Study Streak[\s\S]{0,2500}?● 3 シュート/,
+  );
+  assert.match(
+    normalizedHtml,
+    /Accessible Reader[\s\S]{0,2500}?● 2 シュート/,
+  );
+  assert.match(normalizedHtml, /Meal Map[\s\S]{0,2500}?● 2 シュート/);
+  assert.match(
+    normalizedHtml,
+    /Voice Journal[\s\S]{0,2500}?● 2 シュート/,
+  );
 });
 
 test("Project一覧を検索し、技術と難易度で絞り込める", async () => {
@@ -200,10 +215,59 @@ test("Project詳細が開発環境と依存関係を表示する", async () => {
   assert.match(html, /Node\.js 22\.x/);
   assert.match(html, /pnpm install --frozen-lockfile/);
   assert.match(html, /RepositoryにCommit済み/);
+  const normalizedHtml = html.replaceAll("<!-- -->", "");
+  assert.match(normalizedHtml, /<span>● 3<\/span>/);
+  assert.match(normalizedHtml, /シュート <span>3<\/span>/);
+  assert.match(html, /ストリーク計算をタイムゾーン対応/);
+  assert.match(html, /Playwrightで主要フローをテスト/);
+  assert.match(html, /学習記録フォームのモバイル表示を改善/);
   assert.doesNotMatch(
     html,
     /応募や承認はありません。自分の環境で開発を始めます/,
   );
+});
+
+test("複数のサンプルProject詳細に複数シュートを表示する", async () => {
+  const worker = await getWorker();
+  const cases = [
+    {
+      projectId: "meal-map",
+      titles: [
+        "食材の期限からレシピ候補を並び替え",
+        "位置情報を拒否した場合の検索導線を追加",
+      ],
+    },
+    {
+      projectId: "voice-journal",
+      titles: [
+        "Safari向けの録音形式判定を追加",
+        "音声アップロードの再試行を実装",
+      ],
+    },
+    {
+      projectId: "accessible-reader",
+      titles: [
+        "キーボードだけで表示設定を変更",
+        "読みやすさ設定の共有URLを追加",
+      ],
+    },
+  ];
+
+  for (const { projectId, titles } of cases) {
+    const response = await worker.fetch(
+      new Request(`http://localhost/projects/${projectId}`, {
+        headers: { accept: "text/html" },
+      }),
+      env(),
+      context(),
+    );
+
+    assert.equal(response.status, 200);
+    const html = (await response.text()).replaceAll("<!-- -->", "");
+    assert.match(html, /<span>● 2<\/span>/);
+    assert.match(html, /シュート <span>2<\/span>/);
+    for (const title of titles) assert.match(html, new RegExp(title));
+  }
 });
 
 test("未認証の投稿APIを拒否する", async () => {

@@ -101,6 +101,8 @@ function mapProject(row: Record<string, unknown>): Project {
     (row.implemented_features as Array<Record<string, unknown>> | null) ?? [];
   const plannedRows =
     (row.planned_features as Array<Record<string, unknown>> | null) ?? [];
+  const continuationCountRows =
+    (row.project_continuations as Array<Record<string, unknown>> | null) ?? [];
   const owner = row.profiles as Record<string, unknown> | null;
 
   return {
@@ -156,7 +158,9 @@ function mapProject(row: Record<string, unknown>): Project {
       description: item.description ? String(item.description) : undefined,
     })),
     beyondCount: Number(row.beyond_count ?? 0),
-    continuationCount: Number(row.continuation_count ?? 0),
+    continuationCount: Number(
+      continuationCountRows[0]?.count ?? row.continuation_count ?? 0,
+    ),
     updatedAt: String(row.updated_at),
   };
 }
@@ -215,7 +219,7 @@ export async function listProjects(
     client
       .from("projects")
       .select(
-        "*, profiles!projects_owner_profile_id_fkey(display_name), project_technologies(*), implemented_features(*), planned_features(*)",
+        "*, profiles!projects_owner_profile_id_fkey(display_name), project_technologies(*), implemented_features(*), planned_features(*), project_continuations(count)",
       )
       .eq("status", "published")
       .order("updated_at", { ascending: false }),
@@ -252,7 +256,7 @@ export async function getProject(id: string): Promise<Project | null> {
   const { data, error } = await client
     .from("projects")
     .select(
-      "*, profiles!projects_owner_profile_id_fkey(display_name), project_technologies(*), implemented_features(*), planned_features(*)",
+      "*, profiles!projects_owner_profile_id_fkey(display_name), project_technologies(*), implemented_features(*), planned_features(*), project_continuations(count)",
     )
     .eq("id", id)
     .in("status", ["published", "completed", "archived"])
@@ -265,11 +269,15 @@ export async function getProject(id: string): Promise<Project | null> {
 export async function getProjectContinuations(
   projectId: string,
 ): Promise<ProjectContinuation[]> {
-  const client = publicClient();
-  if (!client) {
+  if (isSampleProject(projectId)) {
     return sampleContinuations.filter(
       (item) => item.sourceProjectId === projectId,
     );
+  }
+
+  const client = publicClient();
+  if (!client) {
+    return [];
   }
 
   const { data, error } = await client

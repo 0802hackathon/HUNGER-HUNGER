@@ -1,6 +1,6 @@
 import type { Project, ProjectContinuation } from "./types";
 
-export const sampleProjects: Project[] = [
+const sampleProjectDefinitions: Array<Omit<Project, "continuationCount">> = [
   {
     id: "study-streak",
     ownerId: "demo-owner-1",
@@ -54,7 +54,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 18,
-    continuationCount: 4,
     updatedAt: "2026-07-27T09:30:00.000Z",
   },
   {
@@ -109,7 +108,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 11,
-    continuationCount: 2,
     updatedAt: "2026-07-25T14:10:00.000Z",
   },
   {
@@ -164,7 +162,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 7,
-    continuationCount: 1,
     updatedAt: "2026-07-22T06:45:00.000Z",
   },
   {
@@ -220,7 +217,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 23,
-    continuationCount: 6,
     updatedAt: "2026-07-20T11:20:00.000Z",
   },
   {
@@ -279,7 +275,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 29,
-    continuationCount: 8,
     updatedAt: "2026-07-31T02:15:00.000Z",
   },
   {
@@ -334,7 +329,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 14,
-    continuationCount: 3,
     updatedAt: "2026-07-29T16:40:00.000Z",
   },
   {
@@ -389,7 +383,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 36,
-    continuationCount: 5,
     updatedAt: "2026-07-18T04:25:00.000Z",
   },
   {
@@ -444,7 +437,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 9,
-    continuationCount: 0,
     updatedAt: "2026-06-30T10:05:00.000Z",
   },
   {
@@ -499,7 +491,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 4,
-    continuationCount: 1,
     updatedAt: "2026-06-12T08:50:00.000Z",
   },
   {
@@ -554,7 +545,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 20,
-    continuationCount: 7,
     updatedAt: "2026-05-24T13:35:00.000Z",
   },
   {
@@ -609,7 +599,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 42,
-    continuationCount: 9,
     updatedAt: "2026-04-08T07:10:00.000Z",
   },
   {
@@ -664,7 +653,6 @@ export const sampleProjects: Project[] = [
       },
     ],
     beyondCount: 2,
-    continuationCount: 0,
     updatedAt: "2026-02-14T01:30:00.000Z",
   },
 ];
@@ -701,4 +689,118 @@ export const sampleContinuations: ProjectContinuation[] = [
     licenseIdentifier: "MIT",
     publishedAt: "2026-07-26T12:30:00.000Z",
   },
+  {
+    id: "shoot-3",
+    sourceProjectId: "study-streak",
+    authorId: "demo-learner-3",
+    authorName: "natsu_codes",
+    title: "学習記録フォームのモバイル表示を改善",
+    summary: "狭い画面でも入力欄と送信Buttonが重ならないように調整しました。",
+    changesMade:
+      "フォームを一列Layoutへ切り替えるBreakpointを追加し、Keyboard表示中の操作を確認しました。",
+    repositoryUrl: "https://github.com/vercel/next.js",
+    learningOutcome:
+      "入力画面はViewportだけでなくSoftware Keyboard表示時にも確認する必要があると学びました。",
+    licenseIdentifier: "MIT",
+    publishedAt: "2026-07-24T10:15:00.000Z",
+  },
+  {
+    id: "shoot-4",
+    sourceProjectId: "meal-map",
+    authorId: "demo-learner-4",
+    authorName: "mio_kitchen",
+    title: "食材の期限からレシピ候補を並び替え",
+    summary: "期限が近い食材を優先してレシピ候補へ表示するように改善しました。",
+    changesMade:
+      "食材の期限と使用量から優先度を計算する関数を追加し、期限未設定の場合を含むUnit Testを実装しました。",
+    repositoryUrl: "https://github.com/supabase/supabase",
+    learningOutcome:
+      "欠損値を含むデータでは、並び替えの基準と同順位時の扱いを先に決めることが重要だと学びました。",
+    licenseIdentifier: "Apache-2.0",
+    publishedAt: "2026-07-24T07:20:00.000Z",
+  },
+  {
+    id: "shoot-5",
+    sourceProjectId: "meal-map",
+    authorId: "demo-learner-5",
+    authorName: "kei_maps",
+    title: "位置情報を拒否した場合の検索導線を追加",
+    summary: "現在地を共有しなくても地域名から店舗を検索できる画面を追加しました。",
+    changesMade:
+      "位置情報の権限状態を判定し、拒否時は地域名入力へ切り替える処理と入力エラー表示を実装しました。",
+    repositoryUrl: "https://github.com/supabase/supabase",
+    learningOutcome:
+      "ブラウザ権限は許可される前提にせず、拒否後も主要機能を使える代替導線が必要だと学びました。",
+    licenseIdentifier: "Apache-2.0",
+    publishedAt: "2026-07-22T13:40:00.000Z",
+  },
+  {
+    id: "shoot-6",
+    sourceProjectId: "voice-journal",
+    authorId: "demo-learner-6",
+    authorName: "riku_audio",
+    title: "Safari向けの録音形式判定を追加",
+    summary: "利用可能な音声形式を確認してから録音を開始するように修正しました。",
+    changesMade:
+      "MediaRecorderの対応形式を順番に検査し、選択したMIME Typeを保存処理へ渡す実装とブラウザ別テストを追加しました。",
+    repositoryUrl: "https://github.com/microsoft/TypeScript",
+    learningOutcome:
+      "Web APIの存在だけで対応可否を判断せず、入力形式まで実行環境ごとに確認する必要があると学びました。",
+    licenseIdentifier: "MIT",
+    publishedAt: "2026-07-21T09:10:00.000Z",
+  },
+  {
+    id: "shoot-7",
+    sourceProjectId: "voice-journal",
+    authorId: "demo-learner-7",
+    authorName: "sena_uploads",
+    title: "音声アップロードの再試行を実装",
+    summary: "通信が中断した音声を再送できるQueueと状態表示を追加しました。",
+    changesMade:
+      "失敗したUploadをIndexedDBへ一時保存し、接続復帰後に再試行する処理と重複送信を防ぐ識別子を実装しました。",
+    repositoryUrl: "https://github.com/microsoft/TypeScript",
+    learningOutcome:
+      "大きなデータの再送では、再試行回数だけでなく重複保存を防ぐ設計も必要だと学びました。",
+    licenseIdentifier: "MIT",
+    publishedAt: "2026-07-18T15:30:00.000Z",
+  },
+  {
+    id: "shoot-8",
+    sourceProjectId: "accessible-reader",
+    authorId: "demo-learner-8",
+    authorName: "hina_a11y",
+    title: "キーボードだけで表示設定を変更",
+    summary: "すべての表示設定をキーボードで操作できるように改善しました。",
+    changesMade:
+      "設定項目のFocus順序を整理し、Arrow Keyで値を変更できるControlと操作方法の読み上げを追加しました。",
+    repositoryUrl: "https://github.com/facebook/react",
+    learningOutcome:
+      "見た目のFocus表示だけでなく、移動順序と読み上げ内容を一緒に検証する重要性を学びました。",
+    licenseIdentifier: "MIT",
+    publishedAt: "2026-07-30T05:45:00.000Z",
+  },
+  {
+    id: "shoot-9",
+    sourceProjectId: "accessible-reader",
+    authorId: "demo-learner-9",
+    authorName: "yuto_frontend",
+    title: "読みやすさ設定の共有URLを追加",
+    summary: "配色、文字サイズ、行間の設定をURLで共有できるようにしました。",
+    changesMade:
+      "表示設定を短いQuery Parameterへ変換し、不正な値を既定値へ戻すValidationと共有Buttonを実装しました。",
+    repositoryUrl: "https://github.com/facebook/react",
+    learningOutcome:
+      "共有URLの入力値は信頼せず、許可する値を限定して復元する必要があると学びました。",
+    licenseIdentifier: "MIT",
+    publishedAt: "2026-07-29T11:25:00.000Z",
+  },
 ];
+
+export const sampleProjects: Project[] = sampleProjectDefinitions.map(
+  (project) => ({
+    ...project,
+    continuationCount: sampleContinuations.filter(
+      (continuation) => continuation.sourceProjectId === project.id,
+    ).length,
+  }),
+);
