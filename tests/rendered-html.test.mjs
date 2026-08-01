@@ -152,17 +152,21 @@ test("Project投稿画面が自動判定と手動確認を区別して表示す�
 
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /公開前の最終確認/);
-  assert.match(html, /Repositoryは公開されていますか/);
-  assert.match(html, /自動判定/);
-  assert.match(html, /手動確認/);
-  assert.match(html, /check-item/);
-  assert.match(html, /残り80文字（最大80文字）/);
-  assert.match(html, /最長の行：残り50文字（最大50文字）/);
-  assert.match(html, /name="setupInstructions"[^>]*maxlength="3000"/);
-  assert.match(html, /フォーマットを挿入/);
-  assert.match(html, /機能名の列挙ではなく、動作する範囲、仮実装、中断地点/);
-  assert.match(html, /記入例を見る/);
+  const normalizedHtml = html.replaceAll("<!-- -->", "");
+  assert.match(normalizedHtml, /公開前の最終確認/);
+  assert.match(normalizedHtml, /Repositoryは公開されていますか/);
+  assert.match(normalizedHtml, /自動判定/);
+  assert.match(normalizedHtml, /手動確認/);
+  assert.match(normalizedHtml, /check-item/);
+  assert.match(normalizedHtml, /残り80文字（最大80文字）/);
+  assert.match(normalizedHtml, /最長の行：残り50文字（最大50文字）/);
+  assert.match(normalizedHtml, /name="setupInstructions"[^>]*max[Ll]ength="3000"/);
+  assert.match(normalizedHtml, /フォーマットを挿入/);
+  assert.match(
+    normalizedHtml,
+    /機能名の列挙ではなく、動作する範囲、仮実装、中断地点/,
+  );
+  assert.match(normalizedHtml, /記入例を見る/);
 });
 
 test("Repository確認APIはGitHub Repository以外のURLを拒否する", async () => {
