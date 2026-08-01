@@ -59,6 +59,8 @@ export function CountedInput({
   const [currentLength, setCurrentLength] = useState(
     String(initialValue).length,
   );
+  const displayedLength =
+    value === undefined ? currentLength : String(value).length;
 
   function handleInput(event: InputEvent<HTMLInputElement>) {
     setCurrentLength(event.currentTarget.value.length);
@@ -79,7 +81,7 @@ export function CountedInput({
       />
       <span id={countId}>
         <CharacterCount
-          currentLength={currentLength}
+          currentLength={displayedLength}
           maxLength={maxLength}
         />
       </span>
@@ -115,6 +117,13 @@ export function CountedTextarea({
   const [currentLength, setCurrentLength] = useState(
     perLine ? longestTrimmedLineLength(initialValue) : initialValue.length,
   );
+  const controlledValue = value === undefined ? undefined : String(value);
+  const displayedLength =
+    controlledValue === undefined
+      ? currentLength
+      : perLine
+        ? longestTrimmedLineLength(controlledValue)
+        : controlledValue.length;
 
   function handleInput(event: InputEvent<HTMLTextAreaElement>) {
     const nextLength = perLine
@@ -143,7 +152,7 @@ export function CountedTextarea({
       />
       <span id={countId}>
         <CharacterCount
-          currentLength={currentLength}
+          currentLength={displayedLength}
           maxLength={maxLength}
           perLine={perLine}
         />

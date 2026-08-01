@@ -22,6 +22,18 @@ import {
 const SUBMISSION_KEY_STORAGE = "hunger-hunger:project-submission-key";
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const CURRENT_STATE_TEMPLATE = `【到達段階】
+
+【一連で動作する範囲】
+-
+
+【仮実装・未接続の箇所】
+-
+
+【作業を中断した地点】
+
+【次に確認する場所】
+-`;
 
 function lines(value: FormDataEntryValue | null) {
   return String(value ?? "")
@@ -96,6 +108,7 @@ export function ProjectForm() {
   const submissionKeyRef = useRef<string | null>(null);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
+  const [currentState, setCurrentState] = useState("");
   const [repositoryUrl, setRepositoryUrl] = useState("");
   const [runtimeRequirements, setRuntimeRequirements] = useState("");
   const [lockfileStatus, setLockfileStatus] = useState("committed");
@@ -258,6 +271,7 @@ export function ProjectForm() {
   function resetChecks() {
     clearSubmissionKey();
     setRepositoryUrl("");
+    setCurrentState("");
     setRuntimeRequirements("");
     setLockfileStatus("committed");
     setRepositoryCheck({
@@ -411,16 +425,50 @@ export function ProjectForm() {
               <p>成功談に整えず、次の人が判断できる事実を残します。</p>
             </div>
           </div>
-          <label>
-            <span>現在の実装状況</span>
+          <div className="guided-field">
+            <div className="guided-field-heading">
+              <label htmlFor="current-state">現在の実装状況</label>
+              <button
+                className="button button-secondary button-small"
+                disabled={currentState.trim().length > 0}
+                onClick={() => setCurrentState(CURRENT_STATE_TEMPLATE)}
+                type="button"
+              >
+                フォーマットを挿入
+              </button>
+            </div>
+            <p className="field-guidance" id="current-state-guidance">
+              機能名の列挙ではなく、動作する範囲、仮実装、中断地点を記載します。
+            </p>
             <CountedTextarea
+              aria-describedby="current-state-guidance"
+              id="current-state"
               maxLength={3000}
               minLength={20}
               name="currentState"
+              onChange={(event) => setCurrentState(event.currentTarget.value)}
               required
-              rows={5}
+              rows={10}
+              value={currentState}
             />
-          </label>
+            <details className="field-example">
+              <summary>記入例を見る</summary>
+              <pre>{`【到達段階】
+主要フローが動作するMVPの状態です。
+
+【一連で動作する範囲】
+- ログインから学習記録の登録・一覧表示まで動作します
+
+【仮実装・未接続の箇所】
+- メール通知はConsole出力で代用しています
+
+【作業を中断した地点】
+学習記録の編集画面からAPIを呼び出す処理の実装途中です。
+
+【次に確認する場所】
+- components/learning-record-form.tsx`}</pre>
+            </details>
+          </div>
           <label>
             <span>開発を断念した理由</span>
             <CountedTextarea

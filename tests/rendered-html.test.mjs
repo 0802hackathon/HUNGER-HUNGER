@@ -160,6 +160,9 @@ test("Project投稿画面が自動判定と手動確認を区別して表示す�
   assert.match(html, /残り80文字（最大80文字）/);
   assert.match(html, /最長の行：残り50文字（最大50文字）/);
   assert.match(html, /name="setupInstructions"[^>]*maxlength="3000"/);
+  assert.match(html, /フォーマットを挿入/);
+  assert.match(html, /機能名の列挙ではなく、動作する範囲、仮実装、中断地点/);
+  assert.match(html, /記入例を見る/);
 });
 
 test("Repository確認APIはGitHub Repository以外のURLを拒否する", async () => {
