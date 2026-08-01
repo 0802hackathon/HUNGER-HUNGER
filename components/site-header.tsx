@@ -6,8 +6,18 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 
+function getHttpsUrl(value: unknown) {
+  if (typeof value !== "string" || !value.trim()) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export function SiteHeader() {
-  const [displayName, setDisplayName] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [logoutPending, setLogoutPending] = useState(false);
   const [logoutFailed, setLogoutFailed] = useState(false);
@@ -24,10 +34,16 @@ export function SiteHeader() {
       const syncUser = (user: User | null) => {
         if (cancelled) return;
         setIsAuthenticated(Boolean(user));
-        setDisplayName(
-          user?.user_metadata?.display_name ??
-            user?.email?.split("@")[0] ??
-            null,
+        setAvatarUrl(
+          [
+            user?.user_metadata?.avatar_url ?? user?.user_metadata?.picture,
+            ...(user?.identities?.flatMap((identity) => [
+              identity.identity_data?.avatar_url,
+              identity.identity_data?.picture,
+            ]) ?? []),
+          ]
+            .map(getHttpsUrl)
+            .find((value): value is string => Boolean(value)) ?? null,
         );
       };
 
@@ -60,7 +76,7 @@ export function SiteHeader() {
     }
 
     setIsAuthenticated(false);
-    setDisplayName(null);
+    setAvatarUrl(null);
     router.replace("/");
     router.refresh();
   }
@@ -87,11 +103,33 @@ export function SiteHeader() {
             投稿する
           </Link>
           <Link
-            aria-label={displayName ? `${displayName}のダッシュボード` : "ログイン"}
-            className="avatar-link"
+            aria-label={isAuthenticated ? "プロフィールを開く" : "ログイン"}
+            className={isAuthenticated ? "avatar-link avatar-link-icon" : "avatar-link"}
             href={isAuthenticated ? "/dashboard" : "/login"}
           >
-            <span className="desktop-only">{displayName ?? "ログイン"}</span>
+            {isAuthenticated ? (
+              <span
+                className={
+                  avatarUrl
+                    ? "header-avatar header-avatar-image"
+                    : "header-avatar"
+                }
+                style={
+                  avatarUrl
+                    ? {
+                        backgroundImage:
+                          "url(" + JSON.stringify(avatarUrl) + ")",
+                      }
+                    : undefined
+                }
+              >
+                {!avatarUrl && (
+                  <span className="header-avatar-placeholder" aria-hidden="true" />
+                )}
+              </span>
+            ) : (
+              <span>ログイン</span>
+            )}
           </Link>
           {isAuthenticated && (
             <button
