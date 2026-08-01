@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ProjectCard } from "@/components/project-card";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -10,6 +11,23 @@ export const metadata: Metadata = {
   description:
     "開発を止めた人の構想を、学習者の実践的な開発経験へつなげます。",
 };
+
+function CodeLine({
+  children,
+  number,
+}: {
+  children?: ReactNode;
+  number: number;
+}) {
+  return (
+    <span className="code-line">
+      <span aria-hidden="true" className="code-line-number">
+        {number}
+      </span>
+      <span className="code-line-source">{children ?? "\u00a0"}</span>
+    </span>
+  );
+}
 
 export default async function Home() {
   const projects = await listProjects();
@@ -36,7 +54,7 @@ export default async function Home() {
           <div className="hero-inner">
             <div className="hero-copy">
               <h1>
-                未完成のコードを、
+                <span className="hero-heading-line">未完成のコードを、</span>
                 <em>次の学びへ。</em>
               </h1>
               <p>
@@ -54,48 +72,81 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="hero-visual" aria-label="Projectを見つけて開発を始める流れ">
-              <div className="terminal-float terminal-float-top">
-                <span>ACTIVE PROJECTS</span>
-                <strong>{projects.length.toString().padStart(2, "0")}</strong>
-              </div>
-              <div className="hero-terminal">
-                <div className="terminal-top">
-                  <span className="terminal-dot red" />
-                  <span className="terminal-dot yellow" />
-                  <span className="terminal-dot green" />
-                  <span>hunger-cli / explore</span>
-                  <span className="terminal-status">● LIVE</span>
+            <figure className="hero-visual" aria-label="識別情報を一般化した開発途中コードの例">
+              <div className="code-editor">
+                <div className="code-editor-topbar">
+                  <span className="windows-app-icon" aria-hidden="true">C</span>
+                  <span className="code-editor-title">work-in-progress.c</span>
+                  <span className="windows-controls" aria-hidden="true">
+                    <i>—</i>
+                    <i>□</i>
+                    <i className="windows-close">×</i>
+                  </span>
                 </div>
-                <div className="terminal-body">
-                  <p>
-                    <span>$</span> hunger explore --tech typescript
-                  </p>
-                  <div className="terminal-result">
-                    <div className="terminal-result-heading">
-                      <strong>Study Streak</strong>
-                      <small>PUBLIC</small>
-                    </div>
-                    <span>Next.js · Supabase · Tailwind</span>
-                    <small>危険度 D · 18 beyonds</small>
-                    <div className="terminal-progress" aria-hidden="true">
-                      <span />
-                    </div>
-                  </div>
-                  <p>
-                    <span>$</span> hunger beyond study-streak
-                  </p>
-                  <p className="success-line">✓ Repositoryを開きました</p>
-                  <p className="cursor-line">
-                    <span>$</span> <i />
-                  </p>
+                <div className="code-editor-tabs" aria-hidden="true">
+                  <span className="code-editor-tab active">
+                    <i>C</i>
+                    work-in-progress.c
+                    <b>●</b>
+                  </span>
+                </div>
+                <div className="code-editor-body">
+                  <pre aria-label="識別情報を一般化した開発途中コードの例">
+                    <code>
+                      <CodeLine number={41}>
+                        <span className="syntax-keyword">typedef struct</span>{" {"}
+                      </CodeLine>
+                      <CodeLine number={42}>{"    bool is_ready;"}</CodeLine>
+                      <CodeLine number={43}>{"    int retry_count;"}</CodeLine>
+                      <CodeLine number={44}>{"} WorkState;"}</CodeLine>
+                      <CodeLine number={45} />
+                      <CodeLine number={46}>
+                        <span className="syntax-keyword">static</span>{" Status "}
+                        <span className="syntax-function">continue_work</span>
+                        {"(WorkState *state) {"}
+                      </CodeLine>
+                      <CodeLine number={47}>
+                        <span className="syntax-todo">{"    /* TODO: replace the temporary implementation */"}</span>
+                      </CodeLine>
+                      <CodeLine number={48}>
+                        {"    "}
+                        <span className="syntax-keyword">if</span>
+                        {" (!state || !state->is_ready) {"}
+                      </CodeLine>
+                      <CodeLine number={49}>
+                        {"        "}
+                        <span className="syntax-function">debug_log</span>
+                        {"("}
+                        <span className="syntax-string">&quot;work still in progress&quot;</span>
+                        {");"}
+                      </CodeLine>
+                      <CodeLine number={50}>
+                        {"        "}
+                        <span className="syntax-keyword">return</span>
+                        {" STATUS_PENDING;"}
+                      </CodeLine>
+                      <CodeLine number={51}>{"    }"}</CodeLine>
+                      <CodeLine number={52} />
+                      <CodeLine number={53}>
+                        <span className="syntax-todo">{"    /* FIXME: add the recovery path */"}</span>
+                      </CodeLine>
+                      <CodeLine number={54}>
+                        {"    "}
+                        <span className="syntax-keyword">return</span>
+                        {" STATUS_NOT_IMPLEMENTED;"}
+                      </CodeLine>
+                      <CodeLine number={55}>{"}"}</CodeLine>
+                    </code>
+                  </pre>
+                </div>
+                <div className="code-editor-footer" aria-hidden="true">
+                  <span>main*</span>
+                  <span>Ln 53, Col 5</span>
+                  <span>UTF-8</span>
+                  <span>C</span>
                 </div>
               </div>
-              <div className="terminal-float terminal-float-bottom">
-                <span className="float-icon" aria-hidden="true">↗</span>
-                <span><strong>{totalBeyonds}</strong> BEYONDS</span>
-              </div>
-            </div>
+            </figure>
           </div>
         </section>
 
@@ -200,7 +251,9 @@ export default async function Home() {
             <span className="eyebrow">THE NEXT COMMIT IS YOURS</span>
             <h2>止まっているコードに、次のCommitを。</h2>
             <p>
-              誰かが本気で作ろうとしたコードへ。読むだけで終わらない、実践の学びを始めよう。
+              誰かが本気で作ろうとしたコードへ。
+              <br />
+              読むだけで終わらない、実践の学びを始めよう。
             </p>
             <div className="cta-actions">
               <Link className="button button-primary button-large" href="/projects">

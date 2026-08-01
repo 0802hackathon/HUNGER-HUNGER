@@ -17,7 +17,11 @@ export function SiteFooter() {
           <Link href="/projects/new">プロジェクトを投稿</Link>
         </nav>
         <div className="footer-note">
-          <p>本サービスはソースコードの所有権移転を仲介するものではありません。</p>
+          <p>
+            本サービスはソースコードの所有権移転を
+            <br />
+            仲介するものではありません。
+          </p>
           <small>© 2026 HUNGER×HUNGER</small>
         </div>
       </div>
