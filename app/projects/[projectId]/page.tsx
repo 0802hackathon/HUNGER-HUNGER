@@ -43,6 +43,7 @@ export default async function ProjectDetailPage({
   const project = await getProject(projectId);
   if (!project) notFound();
   const continuations = await getProjectContinuations(projectId);
+  const continuationCount = continuations.length;
   const isArchived = project.status === "archived";
 
   return (
@@ -63,11 +64,11 @@ export default async function ProjectDetailPage({
           </div>
           <div className="repo-actions">
             <span>↗ {project.beyondCount}</span>
-            <span>● {project.continuationCount}</span>
+            <span>● {continuationCount}</span>
           </div>
         </div>
 
-        <ProjectTabs continuationCount={continuations.length} />
+        <ProjectTabs continuationCount={continuationCount} />
 
         <div className="repo-content">
           <div className="repo-main-column">

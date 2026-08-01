@@ -714,6 +714,16 @@ textarea:focus-visible {
   color: #a5d6ff;
 }
 
+.code-caret {
+  animation: code-caret-blink 1s steps(1, end) infinite;
+  background: #d7ded8;
+  display: inline-block;
+  height: 1.25em;
+  margin-right: -1px;
+  vertical-align: -0.22em;
+  width: 1px;
+}
+
 .code-editor-footer {
   align-items: center;
   background: #15201a;
@@ -735,6 +745,18 @@ textarea:focus-visible {
 
 @keyframes blink {
   50% {
+    opacity: 0;
+  }
+}
+
+@keyframes code-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  46%,
+  100% {
     opacity: 0;
   }
 }

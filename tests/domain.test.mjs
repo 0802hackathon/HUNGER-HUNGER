@@ -320,10 +320,13 @@ test("Supabase未接続のローカル環境はデモデータを使用する", 
 });
 
 test("Supabase接続時も公開ProjectへサンプルProjectを追加する", async () => {
-  const projects = await readFile(
-    new URL("lib/projects.ts", root),
-    "utf8",
-  );
+  const [projects, sampleData, detail, home, styles] = await Promise.all([
+    readFile(new URL("lib/projects.ts", root), "utf8"),
+    readFile(new URL("lib/sample-data.ts", root), "utf8"),
+    readFile(new URL("app/projects/[projectId]/page.tsx", root), "utf8"),
+    readFile(new URL("app/page.tsx", root), "utf8"),
+    readFile(new URL("app/globals.css", root), "utf8"),
+  ]);
 
   assert.match(projects, /function mergeWithSampleProjects/);
   assert.match(
@@ -334,6 +337,24 @@ test("Supabase接続時も公開ProjectへサンプルProjectを追加する", a
     projects,
     /const sampleProject = sampleProjects\.find[\s\S]*state === "archived"[\s\S]*const client = publicClient\(\);/,
   );
+  assert.match(projects, /project_continuations\(count\)/);
+  assert.match(projects, /continuationCountRows\[0\]\?\.count/);
+  assert.match(
+    projects,
+    /if \(isSampleProject\(projectId\)\)[\s\S]*sampleContinuations\.filter/,
+  );
+  assert.match(
+    sampleData,
+    /sampleProjectDefinitions: Array<Omit<Project, "continuationCount">>/,
+  );
+  assert.match(
+    sampleData,
+    /continuationCount: sampleContinuations\.filter\([\s\S]*sourceProjectId === project\.id/,
+  );
+  assert.match(detail, /const continuationCount = continuations\.length/);
+  assert.match(detail, /<ProjectTabs continuationCount=\{continuationCount\}/);
+  assert.match(home, /className="code-caret"/);
+  assert.match(styles, /@keyframes code-caret-blink/);
 });
 
 test("初期表示では認証SDKと画像Componentを読み込まない", async () => {

@@ -128,7 +128,11 @@ export default async function Home() {
                       <CodeLine number={51}>{"    }"}</CodeLine>
                       <CodeLine number={52} />
                       <CodeLine number={53}>
-                        <span className="syntax-todo">{"    /* FIXME: add the recovery path */"}</span>
+                        <span className="syntax-todo">
+                          {"    "}
+                          <span aria-hidden="true" className="code-caret" />
+                          {"/* FIXME: add the recovery path */"}
+                        </span>
                       </CodeLine>
                       <CodeLine number={54}>
                         {"    "}
