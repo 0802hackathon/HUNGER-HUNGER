@@ -223,6 +223,450 @@ export const sampleProjects: Project[] = [
     continuationCount: 6,
     updatedAt: "2026-07-20T11:20:00.000Z",
   },
+  {
+    id: "accessible-reader",
+    ownerId: "demo-owner-5",
+    ownerName: "yui_frontend",
+    title: "Accessible Reader",
+    summary:
+      "読みやすい配色・文字サイズ・行間を選び、設定を共有できる文章ビューアです。",
+    motivation:
+      "長い技術記事を読むと目が疲れるため、自分に合う表示へすぐ切り替えられる道具を作り始めました。",
+    abandonmentReason:
+      "基本的な表示設定を実装した後、キーボード操作と読み上げ対応の設計で手が止まりました。",
+    currentState:
+      "文章の貼り付け、テーマ切り替え、文字サイズと行間の保存まで動作します。",
+    knownLimitations:
+      "フォーカス移動の順序とスクリーンリーダーでの案内は未検証です。設定の共有URLも未実装です。",
+    repositoryUrl: "https://github.com/facebook/react",
+    runtimeRequirements: "Node.js 22.x / モダンブラウザ",
+    packageManager: "npm 10",
+    installCommand: "npm ci",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "依存関係を導入してnpm run devを実行します。外部サービスの設定は不要です。",
+    dependencyNotes:
+      "CSSの相対単位を維持してください。UI Library更新時はKeyboard操作を再確認してください。",
+    testedEnvironment: "Windows 11 NVDA / macOS 15 VoiceOver",
+    defaultBranch: "main",
+    lastTestedCommit: "e5f6a7b",
+    status: "published",
+    difficulty: "beginner",
+    recommendedSkillLevel: "beginner",
+    licenseIdentifier: "MIT",
+    usageTerms:
+      "学習目的のFork・改変・成果公開を許可します。検証時は個人情報を含まない文章を使用してください。",
+    technologies: ["React", "TypeScript", "CSS"],
+    learnableTechnologies: [
+      "アクセシビリティ",
+      "レスポンシブUI",
+      "フロントエンド",
+    ],
+    implementedFeatures: [
+      { id: "arf-1", title: "表示テーマの切り替え" },
+      { id: "arf-2", title: "文字サイズと行間の保存" },
+    ],
+    plannedFeatures: [
+      {
+        id: "arp-1",
+        title: "キーボード操作の改善",
+        description: "すべての設定をキーボードだけで変更できるようにしたい。",
+      },
+      {
+        id: "arp-2",
+        title: "設定の共有",
+        description: "表示設定をURLで共有できるようにしたい。",
+      },
+    ],
+    beyondCount: 29,
+    continuationCount: 8,
+    updatedAt: "2026-07-31T02:15:00.000Z",
+  },
+  {
+    id: "realtime-study-room",
+    ownerId: "demo-owner-6",
+    ownerName: "toma_realtime",
+    title: "Realtime Study Room",
+    summary:
+      "同じ時間に勉強している人の集中状況を、リアルタイムに共有するオンライン自習室です。",
+    motivation:
+      "一人で勉強すると中断しやすく、会話を強制せずに誰かの存在を感じられる場所が欲しかったためです。",
+    abandonmentReason:
+      "再接続時の状態同期と、長時間接続した際の負荷対策を整理しきれませんでした。",
+    currentState:
+      "ルーム作成、集中タイマー、参加者のオンライン表示まで実装済みです。",
+    knownLimitations:
+      "複数タブを開くと参加人数が重複します。切断後のタイマー復元にずれがあります。",
+    repositoryUrl: "https://github.com/sveltejs/svelte",
+    runtimeRequirements: "Node.js 22.x / WebSocket対応ブラウザ",
+    packageManager: "pnpm 10",
+    installCommand: "pnpm install --frozen-lockfile",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "SupabaseのRealtimeを有効にして公開Keyを設定し、pnpm devで起動します。",
+    dependencyNotes:
+      "Realtime Channelの購読解除を維持してください。接続数を増やす前に負荷試験が必要です。",
+    testedEnvironment: "Ubuntu 24.04 / Node.js 22.14 / Chrome",
+    defaultBranch: "main",
+    lastTestedCommit: "f6a7b8c",
+    status: "published",
+    difficulty: "intermediate",
+    recommendedSkillLevel: "intermediate",
+    licenseIdentifier: "MIT",
+    usageTerms:
+      "学習目的のFork・改変を許可します。公開環境では利用中のサービス規約を確認してください。",
+    technologies: ["Svelte", "TypeScript", "Supabase", "WebSocket"],
+    learnableTechnologies: ["WebSocket", "認可・RLS", "テスト"],
+    implementedFeatures: [
+      { id: "rsf-1", title: "集中ルームの作成" },
+      { id: "rsf-2", title: "参加状態のリアルタイム同期" },
+    ],
+    plannedFeatures: [
+      {
+        id: "rsp-1",
+        title: "再接続時の状態復元",
+        description: "一時的な切断後も同じタイマーへ戻れるようにしたい。",
+      },
+      {
+        id: "rsp-2",
+        title: "プレゼンスの重複排除",
+        description: "同じ利用者の複数タブを一人として数えたい。",
+      },
+    ],
+    beyondCount: 14,
+    continuationCount: 3,
+    updatedAt: "2026-07-29T16:40:00.000Z",
+  },
+  {
+    id: "receipt-lens",
+    ownerId: "demo-owner-7",
+    ownerName: "haru_ml",
+    title: "Receipt Lens",
+    summary:
+      "レシート画像から品目と金額を読み取り、支出カテゴリの候補を提示する家計入力支援ツールです。",
+    motivation:
+      "家計簿への手入力を減らし、画像処理と機械学習を実際の題材で学びたかったためです。",
+    abandonmentReason:
+      "店舗ごとに異なるレイアウトへの対応と、学習データの匿名化に時間を割けなくなりました。",
+    currentState:
+      "画像の傾き補正、文字領域の検出、合計金額の候補表示まで動作します。",
+    knownLimitations:
+      "手書き文字と感熱紙の薄い印字には対応できません。カテゴリ推定は少量のダミーデータのみで学習しています。",
+    repositoryUrl: "https://github.com/opencv/opencv",
+    runtimeRequirements: "Python 3.13 / Docker 27",
+    packageManager: "uv 0.8",
+    installCommand: "uv sync --frozen",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "uv syncの後にサンプル画像を配置し、uv run fastapi devでAPIを起動します。",
+    dependencyNotes:
+      "OpenCVとPyTorchの組み合わせはLockfileに固定しています。CPU環境では推論に時間がかかります。",
+    testedEnvironment: "Ubuntu 24.04 / Python 3.13 / CPU推論",
+    defaultBranch: "main",
+    lastTestedCommit: "0a7b8c9",
+    status: "published",
+    difficulty: "advanced",
+    recommendedSkillLevel: "advanced",
+    licenseIdentifier: "Apache-2.0",
+    usageTerms:
+      "匿名化した画像での学習利用・改変を許可します。実在する個人の購入情報を公開しないでください。",
+    technologies: ["Python", "FastAPI", "OpenCV", "PyTorch", "Docker"],
+    learnableTechnologies: ["画像処理", "機械学習", "API設計"],
+    implementedFeatures: [
+      { id: "rlf-1", title: "レシート画像の傾き補正" },
+      { id: "rlf-2", title: "文字領域と合計金額の抽出" },
+    ],
+    plannedFeatures: [
+      {
+        id: "rlp-1",
+        title: "品目カテゴリの推定",
+        description: "品目名から支出カテゴリを提案したい。",
+      },
+      {
+        id: "rlp-2",
+        title: "匿名化パイプライン",
+        description: "店舗名や決済情報を学習前に除去したい。",
+      },
+    ],
+    beyondCount: 36,
+    continuationCount: 5,
+    updatedAt: "2026-07-18T04:25:00.000Z",
+  },
+  {
+    id: "sensor-garden",
+    ownerId: "demo-owner-8",
+    ownerName: "ao_embedded",
+    title: "Sensor Garden",
+    summary:
+      "温度・湿度・土壌水分を記録し、植物ごとの水やり目安を表示する小型IoTシステムです。",
+    motivation:
+      "旅行中に植物の状態を確認したくて、組み込み開発から可視化まで一通り試し始めました。",
+    abandonmentReason:
+      "センサーの個体差を補正する仕組みと、電池駆動の省電力化を両立できませんでした。",
+    currentState:
+      "3種類のセンサー値を収集し、ローカルネットワーク上の画面へ表示できます。",
+    knownLimitations:
+      "センサー値の校正は手動です。通信断中のデータ再送と遠隔更新は未実装です。",
+    repositoryUrl: "https://github.com/rust-lang/rust",
+    runtimeRequirements: "Rust 1.88 / ESP32-C3 / Docker 27",
+    packageManager: "Cargo",
+    installCommand: "cargo fetch --locked",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "開発ボードをUSB接続してFirmwareを書き込み、Docker Composeで受信APIを起動します。",
+    dependencyNotes:
+      "Board Support PackageのVersionを固定しています。異なる基板へ書き込まないでください。",
+    testedEnvironment: "ESP32-C3 / Fedora 42 / Rust 1.88",
+    defaultBranch: "prototype",
+    lastTestedCommit: "1b8c9d0",
+    status: "published",
+    difficulty: "expert",
+    recommendedSkillLevel: "advanced",
+    licenseIdentifier: "MIT",
+    usageTerms:
+      "学習目的のFork・回路変更を許可します。実機作業時は使用する部品の定格を確認してください。",
+    technologies: ["Rust", "C", "SQLite", "Docker"],
+    learnableTechnologies: ["IoT", "組み込み開発", "データ可視化"],
+    implementedFeatures: [
+      { id: "sgf-1", title: "センサー値の定期収集" },
+      { id: "sgf-2", title: "ローカルDashboard表示" },
+    ],
+    plannedFeatures: [
+      {
+        id: "sgp-1",
+        title: "センサーの自動校正",
+        description: "基準値から個体差を補正できるようにしたい。",
+      },
+      {
+        id: "sgp-2",
+        title: "オフラインQueue",
+        description: "通信復旧後に未送信データを再送したい。",
+      },
+    ],
+    beyondCount: 9,
+    continuationCount: 0,
+    updatedAt: "2026-06-30T10:05:00.000Z",
+  },
+  {
+    id: "pocket-budget",
+    ownerId: "demo-owner-9",
+    ownerName: "mio_mobile",
+    title: "Pocket Budget",
+    summary:
+      "通信できない場所でも支出を記録し、月ごとの予算残高を確認できるモバイルアプリです。",
+    motivation:
+      "支出を思い出して後から入力する習慣を変えるため、素早く起動するアプリを作りました。",
+    abandonmentReason:
+      "端末間同期より先にローカルデータの移行設計が必要だと分かり、開発を中断しました。",
+    currentState:
+      "支出の追加・編集、月予算の設定、カテゴリ別の円グラフまで動作します。",
+    knownLimitations:
+      "データのExportとBackupがありません。端末の言語によって金額表示が崩れる場合があります。",
+    repositoryUrl: "https://github.com/flutter/flutter",
+    runtimeRequirements: "Flutter 3.32 / Dart 3.8",
+    packageManager: "pub",
+    installCommand: "flutter pub get",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "Flutter SDKを用意して依存関係を導入し、Android EmulatorまたはiOS Simulatorで起動します。",
+    dependencyNotes:
+      "SQLite Schemaを変更する場合はMigration番号を追加し、既存データからの更新を確認してください。",
+    testedEnvironment: "Android 15 / iOS 18 / Flutter 3.32",
+    defaultBranch: "main",
+    lastTestedCommit: "2c9d0e1",
+    status: "published",
+    difficulty: "beginner",
+    recommendedSkillLevel: "beginner",
+    licenseIdentifier: "BSD-3-Clause",
+    usageTerms:
+      "学習目的のFork・改変・成果公開を許可します。実データを使う場合は端末の保護を有効にしてください。",
+    technologies: ["Dart", "Flutter", "SQLite"],
+    learnableTechnologies: ["データベース設計", "データ可視化", "テスト"],
+    implementedFeatures: [
+      { id: "pbf-1", title: "オフライン支出記録" },
+      { id: "pbf-2", title: "月予算とカテゴリ集計" },
+    ],
+    plannedFeatures: [
+      {
+        id: "pbp-1",
+        title: "暗号化Backup",
+        description: "端末変更時に安全にデータを移せるようにしたい。",
+      },
+      {
+        id: "pbp-2",
+        title: "通貨表示の改善",
+        description: "Localeに合わせて金額を表示したい。",
+      },
+    ],
+    beyondCount: 4,
+    continuationCount: 1,
+    updatedAt: "2026-06-12T08:50:00.000Z",
+  },
+  {
+    id: "api-observatory",
+    ownerId: "demo-owner-10",
+    ownerName: "kei_backend",
+    title: "API Observatory",
+    summary:
+      "複数APIの応答時間とStatusを定期観測し、異常の兆候をDashboardにまとめる監視ツールです。",
+    motivation:
+      "個人開発のAPI障害に利用者からの連絡で気づいた経験から、小さく運用できる監視基盤を作り始めました。",
+    abandonmentReason:
+      "通知の重複抑制と大量Endpointを監視するScheduler設計が複雑になりました。",
+    currentState:
+      "HTTP Checkの登録、定期実行、24時間分の応答時間グラフまで実装済みです。",
+    knownLimitations:
+      "同一障害で通知が複数回送られます。Workerを複数起動するとCheckが重複します。",
+    repositoryUrl: "https://github.com/golang/go",
+    runtimeRequirements: "Go 1.24 / PostgreSQL 17 / Redis 8",
+    packageManager: "Go modules",
+    installCommand: "go mod download",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "Docker ComposeでPostgreSQLとRedisを起動し、go run ./cmd/serverを実行します。",
+    dependencyNotes:
+      "Migration適用前にDatabaseのBackupを取得してください。Redisの永続化は開発環境で無効です。",
+    testedEnvironment: "Ubuntu 24.04 / Go 1.24 / Docker 27",
+    defaultBranch: "main",
+    lastTestedCommit: "3d0e1f2",
+    status: "published",
+    difficulty: "intermediate",
+    recommendedSkillLevel: "intermediate",
+    licenseIdentifier: "Apache-2.0",
+    usageTerms:
+      "学習目的のFork・改変を許可します。第三者のEndpointを無断で高頻度に監視しないでください。",
+    technologies: ["Go", "PostgreSQL", "Redis", "Docker"],
+    learnableTechnologies: ["バックエンド", "API設計", "パフォーマンス"],
+    implementedFeatures: [
+      { id: "aof-1", title: "HTTP Checkの定期実行" },
+      { id: "aof-2", title: "応答時間の可視化" },
+    ],
+    plannedFeatures: [
+      {
+        id: "aop-1",
+        title: "通知の重複抑制",
+        description: "同じ障害中は一度だけ通知したい。",
+      },
+      {
+        id: "aop-2",
+        title: "分散Scheduler",
+        description: "複数WorkerでCheckを重複なく分担したい。",
+      },
+    ],
+    beyondCount: 20,
+    continuationCount: 7,
+    updatedAt: "2026-05-24T13:35:00.000Z",
+  },
+  {
+    id: "subtitle-studio",
+    ownerId: "demo-owner-11",
+    ownerName: "rin_media",
+    title: "Subtitle Studio",
+    summary:
+      "短い動画の音声から字幕候補を作成し、時間位置と文章をブラウザで編集するツールです。",
+    motivation:
+      "勉強会動画へ字幕を付ける作業を減らし、音声処理と編集UIを組み合わせてみたかったためです。",
+    abandonmentReason:
+      "長い動画の分割処理と、話者が重なった場面の文字起こし精度を改善できませんでした。",
+    currentState:
+      "動画Upload、音声抽出、字幕候補の生成とタイムライン編集まで動作します。",
+    knownLimitations:
+      "10分を超える動画は処理できません。字幕のExportはWebVTT形式だけに対応しています。",
+    repositoryUrl: "https://github.com/fastapi/fastapi",
+    runtimeRequirements: "Node.js 22.x / Python 3.13 / FFmpeg 7",
+    packageManager: "pnpm 10 / uv 0.8",
+    installCommand: "pnpm install --frozen-lockfile && uv sync --frozen",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "FrontendとAPIの依存関係を導入し、FFmpegのPathを設定して両方の開発Serverを起動します。",
+    dependencyNotes:
+      "音声モデルは初回起動時に取得されます。モデルのLicenseと必要容量を事前に確認してください。",
+    testedEnvironment: "macOS 15 / Python 3.13 / Node.js 22.14",
+    defaultBranch: "develop",
+    lastTestedCommit: "4e1f2a3",
+    status: "published",
+    difficulty: "advanced",
+    recommendedSkillLevel: "advanced",
+    licenseIdentifier: "MIT",
+    usageTerms:
+      "権利を持つ動画での学習利用・改変を許可します。第三者の音声や映像を無断で使用しないでください。",
+    technologies: ["TypeScript", "React", "Python", "FastAPI"],
+    learnableTechnologies: ["音声処理", "動画処理", "自然言語処理"],
+    implementedFeatures: [
+      { id: "ssf-1", title: "動画からの音声抽出" },
+      { id: "ssf-2", title: "字幕タイムライン編集" },
+    ],
+    plannedFeatures: [
+      {
+        id: "ssp-1",
+        title: "長時間動画の分割処理",
+        description: "一定時間ごとにJobを分けて処理したい。",
+      },
+      {
+        id: "ssp-2",
+        title: "字幕形式の追加",
+        description: "SRT形式でも字幕を書き出せるようにしたい。",
+      },
+    ],
+    beyondCount: 42,
+    continuationCount: 9,
+    updatedAt: "2026-04-08T07:10:00.000Z",
+  },
+  {
+    id: "city-temperature-atlas",
+    ownerId: "demo-owner-12",
+    ownerName: "saki_data",
+    title: "City Temperature Atlas",
+    summary:
+      "公開気象データから都市ごとの気温変化を集計し、地図とグラフで比較する分析サイトです。",
+    motivation:
+      "表形式の公開データを、地域差や長期変化が直感的に分かる形へ変換したかったためです。",
+    abandonmentReason:
+      "欠損値の扱いと観測地点の変更履歴を反映するデータPipelineを完成できませんでした。",
+    currentState:
+      "CSV取込、月別集計、3都市の折れ線グラフと地図表示まで動作します。",
+    knownLimitations:
+      "観測地点が移転した年を区別していません。大きなCSVの取込には数分かかります。",
+    repositoryUrl: "https://github.com/pandas-dev/pandas",
+    runtimeRequirements: "Python 3.13 / R 4.5 / PostgreSQL 17",
+    packageManager: "uv 0.8 / renv",
+    installCommand: "uv sync --frozen && Rscript -e 'renv::restore()'",
+    lockfileStatus: "committed",
+    setupInstructions:
+      "公開サンプルCSVをdataディレクトリへ配置し、分析Batchの後にWeb Serverを起動します。",
+    dependencyNotes:
+      "元データのSchema変更に備えて取込処理を分離しています。分析結果にはデータ出典を残してください。",
+    testedEnvironment: "Ubuntu 24.04 / Python 3.13 / R 4.5",
+    defaultBranch: "main",
+    lastTestedCommit: "5f2a3b4",
+    status: "published",
+    difficulty: "expert",
+    recommendedSkillLevel: "advanced",
+    licenseIdentifier: "BSD-3-Clause",
+    usageTerms:
+      "出典を明記した学習利用・改変・成果公開を許可します。公開データ提供元の規約も確認してください。",
+    technologies: ["Python", "R", "PostgreSQL", "Google Cloud"],
+    learnableTechnologies: ["データ分析", "データ可視化", "クラウド"],
+    implementedFeatures: [
+      { id: "ctf-1", title: "公開CSVの取込と月別集計" },
+      { id: "ctf-2", title: "都市別グラフと地図表示" },
+    ],
+    plannedFeatures: [
+      {
+        id: "ctp-1",
+        title: "観測地点履歴の反映",
+        description: "地点の移転前後を別系列として扱いたい。",
+      },
+      {
+        id: "ctp-2",
+        title: "取込処理の高速化",
+        description: "大きなCSVを分割して並列処理したい。",
+      },
+    ],
+    beyondCount: 2,
+    continuationCount: 0,
+    updatedAt: "2026-02-14T01:30:00.000Z",
+  },
 ];
 
 export const sampleContinuations: ProjectContinuation[] = [

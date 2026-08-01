@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { sampleContinuations, sampleProjects } from "./sample-data";
 import { getSupabasePublicConfig } from "./supabase-config";
+import { getServerSupabase } from "./supabase-server";
 import {
   LEARNING_TOPIC_OPTIONS,
   TECHNOLOGY_OPTIONS,
@@ -160,31 +161,93 @@ function mapProject(row: Record<string, unknown>): Project {
   };
 }
 
+type SampleProjectState = "archived" | "deleted";
+
+export function isSampleProject(projectId: string) {
+  return sampleProjects.some((project) => project.id === projectId);
+}
+
+async function getSampleProjectStates() {
+  const client = await getServerSupabase();
+  if (!client) return new Map<string, SampleProjectState>();
+
+  const { data, error } = await client
+    .from("sample_project_preferences")
+    .select("sample_project_id, state");
+
+  if (error || !data) return new Map<string, SampleProjectState>();
+  return new Map(
+    data.map((row) => [
+      String(row.sample_project_id),
+      row.state as SampleProjectState,
+    ]),
+  );
+}
+
+function mergeWithSampleProjects(
+  projects: Project[],
+  sampleStates: Map<string, SampleProjectState>,
+) {
+  const projectIds = new Set(projects.map((project) => project.id));
+  return [
+    ...projects,
+    ...sampleProjects.filter(
+      (project) =>
+        !projectIds.has(project.id) && !sampleStates.has(project.id),
+    ),
+  ];
+}
+
 export async function listProjects(
   filters: ProjectFilters = {},
 ): Promise<Project[]> {
   const client = publicClient();
-  if (!client) return filterProjects(sampleProjects, filters);
+  const sampleStatesPromise = getSampleProjectStates();
+  if (!client) {
+    const sampleStates = await sampleStatesPromise;
+    return filterProjects(
+      sampleProjects.filter((project) => !sampleStates.has(project.id)),
+      filters,
+    );
+  }
 
-  const { data, error } = await client
-    .from("projects")
-    .select(
-      "*, profiles!projects_owner_profile_id_fkey(display_name), project_technologies(*), implemented_features(*), planned_features(*)",
-    )
-    .eq("status", "published")
-    .order("updated_at", { ascending: false });
+  const [{ data, error }, sampleStates] = await Promise.all([
+    client
+      .from("projects")
+      .select(
+        "*, profiles!projects_owner_profile_id_fkey(display_name), project_technologies(*), implemented_features(*), planned_features(*)",
+      )
+      .eq("status", "published")
+      .order("updated_at", { ascending: false }),
+    sampleStatesPromise,
+  ]);
 
   if (error || !data) {
     console.error("Project list fallback:", error?.message);
-    return filterProjects(sampleProjects, filters);
+    return filterProjects(
+      sampleProjects.filter((project) => !sampleStates.has(project.id)),
+      filters,
+    );
   }
 
-  return filterProjects(data.map((row) => mapProject(row)), filters);
+  return filterProjects(
+    mergeWithSampleProjects(data.map((row) => mapProject(row)), sampleStates),
+    filters,
+  );
 }
 
 export async function getProject(id: string): Promise<Project | null> {
+  const sampleProject = sampleProjects.find((item) => item.id === id);
+  if (sampleProject) {
+    const state = (await getSampleProjectStates()).get(id);
+    if (state === "deleted") return null;
+    return state === "archived"
+      ? { ...sampleProject, status: "archived" }
+      : sampleProject;
+  }
+
   const client = publicClient();
-  if (!client) return sampleProjects.find((item) => item.id === id) ?? null;
+  if (!client) return null;
 
   const { data, error } = await client
     .from("projects")
@@ -195,9 +258,7 @@ export async function getProject(id: string): Promise<Project | null> {
     .in("status", ["published", "completed", "archived"])
     .maybeSingle();
 
-  if (error || !data) {
-    return sampleProjects.find((item) => item.id === id) ?? null;
-  }
+  if (error || !data) return null;
   return mapProject(data);
 }
 
