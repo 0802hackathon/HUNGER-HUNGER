@@ -35,16 +35,14 @@ export default async function Home() {
           <div className="hero-glow hero-glow-blue" aria-hidden="true" />
           <div className="hero-inner">
             <div className="hero-copy">
-              <span className="hero-kicker">
-                <i aria-hidden="true" />
-                OPEN PROJECTS FOR REAL LEARNING
-              </span>
               <h1>
                 未完成のコードを、
                 <em>次の学びへ。</em>
               </h1>
               <p>
-                未完成の構想と、実践的な題材を探すためのプラットフォーム。公開されたRepositoryから自由に始められます。
+                未完成の構想と、実践的な題材を探すためのプラットフォーム。
+                <br />
+                公開されたRepositoryから自由に始められます。
               </p>
               <div className="hero-actions">
                 <Link className="button button-primary button-large" href="/projects">
@@ -54,11 +52,6 @@ export default async function Home() {
                   未完成Projectを投稿
                 </Link>
               </div>
-              <ul className="hero-trust" aria-label="サービスの特徴">
-                <li><span aria-hidden="true">✓</span> 公開Repositoryのみ</li>
-                <li><span aria-hidden="true">✓</span> 所有権はそのまま</li>
-                <li><span aria-hidden="true">✓</span> 成果を元Projectへ関連付け</li>
-              </ul>
             </div>
 
             <div className="hero-visual" aria-label="Projectを見つけて開発を始める流れ">
@@ -199,19 +192,6 @@ export default async function Home() {
                 <ProjectCard key={project.id} project={project} />
               ))}
             </div>
-            <div className="technology-paths">
-              <span>技術から探す</span>
-              <div>
-                {["TypeScript", "Next.js", "Supabase", "React"].map((technology) => (
-                  <Link
-                    href={`/projects?technology=${encodeURIComponent(technology)}`}
-                    key={technology}
-                  >
-                    {technology} <span aria-hidden="true">↗</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
           </div>
         </section>
 
@@ -220,7 +200,7 @@ export default async function Home() {
             <span className="eyebrow">THE NEXT COMMIT IS YOURS</span>
             <h2>止まっているコードに、次のCommitを。</h2>
             <p>
-              チュートリアルの次は、誰かが本気で作ろうとしたコードへ。読むだけで終わらない、実践の学びを始めよう。
+              誰かが本気で作ろうとしたコードへ。読むだけで終わらない、実践の学びを始めよう。
             </p>
             <div className="cta-actions">
               <Link className="button button-primary button-large" href="/projects">

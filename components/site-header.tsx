@@ -74,7 +74,6 @@ export function SiteHeader() {
           </span>
           <span className="brand-copy">
             <strong>HUNGER×HUNGER</strong>
-            <small>OPEN PROJECTS</small>
           </span>
         </Link>
 
