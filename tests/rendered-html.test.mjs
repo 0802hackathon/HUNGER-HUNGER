@@ -43,10 +43,15 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   );
   assert.match(html, /ビヨンド/);
   assert.match(html, /シュート/);
-  assert.match(html, /hunger explore --tech typescript/);
-  assert.match(html, /Repositoryを開きました/);
-  assert.match(html, /terminal-dot red/);
-  assert.match(html, /ACTIVE PROJECTS/);
+  assert.match(html, /work-in-progress\.c/);
+  assert.match(html, /TODO: replace the temporary implementation/);
+  assert.match(html, /FIXME: add the recovery path/);
+  assert.match(html, /識別情報を一般化した開発途中コードの例/);
+  assert.doesNotMatch(html, /zii\/netscape|jsStubs\.c|NPL 1\.0|IN PROGRESS/);
+  assert.match(html, /windows-controls/);
+  assert.doesNotMatch(html, /terminal-dot red/);
+  assert.doesNotMatch(html, /UNFINISHED MARKERS/);
+  assert.doesNotMatch(html, /hunger-cli \/ explore/);
   assert.match(html, /公開Project/);
   assert.doesNotMatch(html, /OPEN PROJECTS(?: FOR REAL LEARNING)?/);
   assert.doesNotMatch(
