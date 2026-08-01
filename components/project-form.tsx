@@ -623,7 +623,7 @@ export function ProjectForm() {
             </label>
             <label>
               <span>Install Command</span>
-              <CountedInput
+              <input
                 maxLength={300}
                 name="installCommand"
                 placeholder="pnpm install --frozen-lockfile"
@@ -651,7 +651,7 @@ export function ProjectForm() {
             </label>
             <label>
               <span>Default Branch</span>
-              <CountedInput
+              <input
                 defaultValue="main"
                 maxLength={100}
                 name="defaultBranch"
@@ -661,7 +661,7 @@ export function ProjectForm() {
           </div>
           <label>
             <span>最後に動作確認したCommit SHA（任意）</span>
-            <CountedInput
+            <input
               maxLength={64}
               minLength={7}
               name="lastTestedCommit"
@@ -702,7 +702,7 @@ export function ProjectForm() {
           </div>
           <label>
             <span>公開GitHub Repository URL</span>
-            <CountedInput
+            <input
               name="repositoryUrl"
               placeholder="https://github.com/owner/repository"
               required
@@ -712,7 +712,7 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>ライセンス</span>
-              <CountedInput
+              <input
                 maxLength={80}
                 name="licenseIdentifier"
                 placeholder="MIT / Apache-2.0"

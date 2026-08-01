@@ -8,7 +8,6 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { CharacterCount } from "@/components/character-count-field";
 
 type Props = {
   name: string;
@@ -147,8 +146,6 @@ export function SearchCombobox({
           }, 100);
         }}
       />
-
-      <CharacterCount currentLength={query.length} maxLength={maxLength} />
 
       {open && (
         <ul id={listboxId} role="listbox" className="search-combobox-list">
