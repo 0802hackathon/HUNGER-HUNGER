@@ -1661,9 +1661,14 @@ textarea {
 }
 
 .repo-tabs a,
-.tab-nav a {
+.tab-nav button {
+  background: transparent;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
   border-bottom: 2px solid transparent;
   color: var(--text-muted);
+  cursor: pointer;
   font-size: 13px;
   font-weight: 500;
   padding: 12px 14px;
@@ -1671,20 +1676,20 @@ textarea {
 }
 
 .repo-tabs a[aria-current="page"],
-.tab-nav a[aria-current="page"] {
+.tab-nav button[aria-selected="true"] {
   border-bottom-color: #fd8c73;
   color: var(--text);
   font-weight: 600;
 }
 
 .repo-tabs a:hover,
-.tab-nav a:hover {
+.tab-nav button:hover {
   background: rgba(175, 184, 193, 0.12);
   border-radius: 6px 6px 0 0;
 }
 
 .repo-tabs a span,
-.tab-nav a span {
+.tab-nav button span {
   background: rgba(175, 184, 193, 0.2);
   border-radius: 999px;
   font-size: 10px;
@@ -2643,37 +2648,77 @@ textarea {
   width: 82px;
 }
 
+.profile-avatar-image {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .profile-card h1 {
   font-size: 21px;
   margin: 18px 0 5px;
 }
 
-.profile-card>p {
+.profile-card>p,
+.profile-details p {
   color: var(--text-muted);
   font-size: 13px;
   line-height: 1.6;
 }
 
-.connection-state {
-  align-items: center;
-  border-top: 1px solid var(--border);
+.profile-empty {
   color: var(--text-subtle);
-  display: flex;
-  font-size: 11px;
-  gap: 7px;
+}
+
+.profile-details {
+  border-top: 1px solid var(--border);
   margin: 20px 0;
   padding-top: 15px;
 }
 
-.connection-state span {
-  background: #d4a72c;
-  border-radius: 50%;
-  height: 8px;
-  width: 8px;
+.profile-details>div+div,
+.profile-details>a {
+  margin-top: 14px;
 }
 
-.connection-state.connected span {
-  background: var(--accent);
+.profile-details strong {
+  color: var(--text-subtle);
+  display: block;
+  font-size: 11px;
+  margin-bottom: 7px;
+}
+
+.profile-details p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.profile-details ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-details li {
+  background: var(--accent-soft);
+  border-radius: 999px;
+  color: var(--accent-strong);
+  font-size: 10px;
+  padding: 4px 7px;
+}
+
+.profile-details>a {
+  color: var(--link);
+  display: inline-block;
+  font-size: 12px;
+}
+
+.profile-actions {
+  display: grid;
+  gap: 20px;
 }
 
 .dashboard-main {
@@ -2687,6 +2732,7 @@ textarea {
 
 .tab-nav {
   margin-bottom: 22px;
+  scroll-margin-top: 84px;
 }
 
 .dashboard-section {
@@ -2719,6 +2765,55 @@ textarea {
   padding: 18px 20px;
 }
 
+.activity-card {
+  min-height: 88px;
+  position: relative;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.activity-card:hover {
+  background: var(--surface-subtle);
+  box-shadow: 3px 0 0 var(--accent) inset;
+}
+
+.activity-card-link {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: flex-end;
+  padding: 18px 20px;
+  position: absolute;
+  z-index: 1;
+}
+
+.activity-card-link:focus-visible {
+  border-radius: 6px;
+  outline: 3px solid rgba(9, 105, 218, 0.35);
+  outline-offset: -3px;
+}
+
+.activity-link-label {
+  background: var(--surface);
+  border: 1px solid #cbd4cc;
+  border-radius: 7px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 11px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.activity-card:hover .activity-link-label,
+.activity-card-link:focus-visible .activity-link-label {
+  background: #f3f4f6;
+  border-color: #8c959f;
+  transform: translateY(-1px);
+}
+
 .activity-row+.activity-row {
   border-top: 1px solid var(--border);
 }
@@ -2749,11 +2844,6 @@ textarea {
   color: var(--text-muted);
   font-size: 12px;
   margin: 5px 0 9px;
-}
-
-.activity-row>a {
-  color: var(--link);
-  font-size: 12px;
 }
 
 .progress-track {
@@ -3171,6 +3261,8 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .inline-editor {

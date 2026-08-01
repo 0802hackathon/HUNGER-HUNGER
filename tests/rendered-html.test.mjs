@@ -37,7 +37,10 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   const html = await response.text();
   assert.match(html, /HUNGER/);
   assert.match(html, /未完成のコードを/);
-  assert.match(html, /未完成の構想と、実践的な題材を探すためのプラットフォーム/);
+  assert.match(
+    html,
+    /未完成の構想と、実践的な題材を探すためのプラットフォーム。<br\/>公開されたRepositoryから自由に始められます。/,
+  );
   assert.match(html, /ビヨンド/);
   assert.match(html, /シュート/);
   assert.match(html, /hunger explore --tech typescript/);
@@ -45,12 +48,44 @@ test("ホームが製品コンセプトと主要導線をサーバーレンダ�
   assert.match(html, /terminal-dot red/);
   assert.match(html, /ACTIVE PROJECTS/);
   assert.match(html, /公開Project/);
-  assert.match(html, /技術から探す/);
+  assert.doesNotMatch(html, /OPEN PROJECTS(?: FOR REAL LEARNING)?/);
+  assert.doesNotMatch(
+    html,
+    /公開Repositoryのみ|所有権はそのまま|成果を元Projectへ関連付け/,
+  );
+  assert.doesNotMatch(html, /技術から探す/);
+  assert.doesNotMatch(html, /チュートリアルの次は、/);
   assert.match(html, /未完成のコードと設計を整理して残すイラスト/);
   assert.match(html, /og\.png/);
   assert.doesNotMatch(html, /loading-page/);
   assert.doesNotMatch(html, /応募も承認もなく|応募・承認なし/);
   assert.doesNotMatch(html, /Starter Project/i);
+});
+
+test("ダッシュボードがプロフィール、サンプル活動、切替タブを表示する", async () => {
+  const worker = await getWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/dashboard", {
+      headers: { accept: "text/html" },
+    }),
+    env(),
+    context(),
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /デモハンター/);
+  assert.match(html, /Study Streak/);
+  assert.match(html, /role="tablist"/);
+  assert.match(html, /ビヨンド/);
+  assert.match(html, /シュート/);
+  assert.match(html, /投稿Project/);
+  assert.match(html, /プロフィールを編集/);
+  assert.match(html, /次のプロジェクトを探す/);
+  assert.doesNotMatch(
+    html,
+    /ハンターダッシュボード|Supabase接続済み|デモデータ表示中/,
+  );
 });
 
 test("Project一覧が検索UIとProjectを表示する", async () => {
