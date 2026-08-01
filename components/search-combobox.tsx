@@ -8,11 +8,13 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
+import { CharacterCount } from "@/components/character-count-field";
 
 type Props = {
   name: string;
   options: readonly string[];
   defaultValue?: string;
+  maxLength?: number;
   onValueChange?: (value: string) => void;
   placeholder?: string;
   required?: boolean;
@@ -22,6 +24,7 @@ export function SearchCombobox({
   name,
   options,
   defaultValue = "",
+  maxLength,
   onValueChange,
   placeholder = "検索…",
   required = false,
@@ -111,6 +114,7 @@ export function SearchCombobox({
           open && activeIndex >= 0 ? `${id}-option-${activeIndex}` : undefined
         }
         autoComplete="off"
+        maxLength={maxLength}
         placeholder={placeholder}
         required={required}
         value={query}
@@ -143,6 +147,8 @@ export function SearchCombobox({
           }, 100);
         }}
       />
+
+      <CharacterCount currentLength={query.length} maxLength={maxLength} />
 
       {open && (
         <ul id={listboxId} role="listbox" className="search-combobox-list">

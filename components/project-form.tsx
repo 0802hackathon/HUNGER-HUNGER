@@ -4,6 +4,10 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 import { SearchCombobox } from "@/components/search-combobox";
+import {
+  CountedInput,
+  CountedTextarea,
+} from "@/components/character-count-field";
 import { parseGitHubRepositoryUrl } from "@/lib/github-url";
 import {
   PACKAGE_MANAGER_OPTIONS,
@@ -18,6 +22,18 @@ import {
 const SUBMISSION_KEY_STORAGE = "hunger-hunger:project-submission-key";
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const CURRENT_STATE_TEMPLATE = `【到達段階】
+
+【一連で動作する範囲】
+-
+
+【仮実装・未接続の箇所】
+-
+
+【作業を中断した地点】
+
+【次に確認する場所】
+-`;
 
 function lines(value: FormDataEntryValue | null) {
   return String(value ?? "")
@@ -92,6 +108,7 @@ export function ProjectForm() {
   const submissionKeyRef = useRef<string | null>(null);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
+  const [currentState, setCurrentState] = useState("");
   const [repositoryUrl, setRepositoryUrl] = useState("");
   const [runtimeRequirements, setRuntimeRequirements] = useState("");
   const [lockfileStatus, setLockfileStatus] = useState("committed");
@@ -254,6 +271,7 @@ export function ProjectForm() {
   function resetChecks() {
     clearSubmissionKey();
     setRepositoryUrl("");
+    setCurrentState("");
     setRuntimeRequirements("");
     setLockfileStatus("committed");
     setRepositoryCheck({
@@ -375,11 +393,11 @@ export function ProjectForm() {
           </div>
           <label>
             <span>タイトル</span>
-            <input maxLength={80} minLength={3} name="title" required />
+            <CountedInput maxLength={80} minLength={3} name="title" required />
           </label>
           <label>
             <span>一行説明</span>
-            <textarea
+            <CountedTextarea
               maxLength={240}
               minLength={20}
               name="summary"
@@ -389,7 +407,13 @@ export function ProjectForm() {
           </label>
           <label>
             <span>なぜ開発を始めたのか</span>
-            <textarea minLength={20} name="motivation" required rows={5} />
+            <CountedTextarea
+              maxLength={2000}
+              minLength={20}
+              name="motivation"
+              required
+              rows={5}
+            />
           </label>
         </section>
 
@@ -401,13 +425,54 @@ export function ProjectForm() {
               <p>成功談に整えず、次の人が判断できる事実を残します。</p>
             </div>
           </div>
-          <label>
-            <span>現在の実装状況</span>
-            <textarea minLength={20} name="currentState" required rows={5} />
-          </label>
+          <div className="guided-field">
+            <div className="guided-field-heading">
+              <label htmlFor="current-state">現在の実装状況</label>
+              <button
+                className="button button-secondary button-small"
+                disabled={currentState.trim().length > 0}
+                onClick={() => setCurrentState(CURRENT_STATE_TEMPLATE)}
+                type="button"
+              >
+                フォーマットを挿入
+              </button>
+            </div>
+            <p className="field-guidance" id="current-state-guidance">
+              機能名の列挙ではなく、動作する範囲、仮実装、中断地点を記載します。
+            </p>
+            <CountedTextarea
+              aria-describedby="current-state-guidance"
+              id="current-state"
+              maxLength={3000}
+              minLength={20}
+              name="currentState"
+              onChange={(event) => setCurrentState(event.currentTarget.value)}
+              required
+              rows={10}
+              value={currentState}
+            />
+            <details className="field-example">
+              <summary>記入例を見る</summary>
+              <pre>{`【到達段階】
+主要フローが動作するMVPの状態です。
+
+【一連で動作する範囲】
+- ログインから学習記録の登録・一覧表示まで動作します
+
+【仮実装・未接続の箇所】
+- メール通知はConsole出力で代用しています
+
+【作業を中断した地点】
+学習記録の編集画面からAPIを呼び出す処理の実装途中です。
+
+【次に確認する場所】
+- components/learning-record-form.tsx`}</pre>
+            </details>
+          </div>
           <label>
             <span>開発を断念した理由</span>
-            <textarea
+            <CountedTextarea
+              maxLength={2000}
               minLength={20}
               name="abandonmentReason"
               required
@@ -416,7 +481,8 @@ export function ProjectForm() {
           </label>
           <label>
             <span>既知の制約・不具合</span>
-            <textarea
+            <CountedTextarea
+              maxLength={3000}
               minLength={10}
               name="knownLimitations"
               required
@@ -436,16 +502,20 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>実装済み機能</span>
-              <textarea
+              <CountedTextarea
+                maxLength={120}
                 name="implementedFeatures"
+                perLine
                 placeholder={"メール認証\n学習記録の追加"}
                 rows={6}
               />
             </label>
             <label>
               <span>実装予定だった機能</span>
-              <textarea
+              <CountedTextarea
+                maxLength={120}
                 name="plannedFeatures"
+                perLine
                 placeholder={"タイムゾーン対応\n月次レポート"}
                 required
                 rows={6}
@@ -469,8 +539,10 @@ export function ProjectForm() {
             </div>
             <label className="custom-option-field">
               <span>その他（1行に1つ）</span>
-              <textarea
+              <CountedTextarea
+                maxLength={50}
                 name="customTechnologies"
+                perLine
                 placeholder={"OpenGL\nROS 2"}
                 rows={3}
               />
@@ -493,8 +565,10 @@ export function ProjectForm() {
             </div>
             <label className="custom-option-field">
               <span>その他（1行に1つ）</span>
-              <textarea
+              <CountedTextarea
+                maxLength={50}
                 name="customLearningTopics"
+                perLine
                 placeholder={"コンパイラ\nロボティクス"}
                 rows={3}
               />
@@ -529,6 +603,7 @@ export function ProjectForm() {
             <label>
               <span>Runtime・Version</span>
               <SearchCombobox
+                maxLength={300}
                 name="runtimeRequirements"
                 onValueChange={setRuntimeRequirements}
                 options={RUNTIME_OPTIONS}
@@ -539,6 +614,7 @@ export function ProjectForm() {
             <label>
               <span>Package Manager・Version</span>
               <SearchCombobox
+                maxLength={80}
                 name="packageManager"
                 options={PACKAGE_MANAGER_OPTIONS}
                 placeholder="候補を検索"
@@ -547,7 +623,8 @@ export function ProjectForm() {
             </label>
             <label>
               <span>Install Command</span>
-              <input
+              <CountedInput
+                maxLength={300}
                 name="installCommand"
                 placeholder="pnpm install --frozen-lockfile"
                 required
@@ -565,6 +642,7 @@ export function ProjectForm() {
             <label>
               <span>動作確認環境</span>
               <SearchCombobox
+                maxLength={500}
                 name="testedEnvironment"
                 options={TESTED_ENVIRONMENT_OPTIONS}
                 placeholder="候補を検索"
@@ -573,12 +651,17 @@ export function ProjectForm() {
             </label>
             <label>
               <span>Default Branch</span>
-              <input defaultValue="main" name="defaultBranch" required />
+              <CountedInput
+                defaultValue="main"
+                maxLength={100}
+                name="defaultBranch"
+                required
+              />
             </label>
           </div>
           <label>
             <span>最後に動作確認したCommit SHA（任意）</span>
-            <input
+            <CountedInput
               maxLength={64}
               minLength={7}
               name="lastTestedCommit"
@@ -587,7 +670,8 @@ export function ProjectForm() {
           </label>
           <label>
             <span>Setup手順</span>
-            <textarea
+            <CountedTextarea
+              maxLength={3000}
               minLength={20}
               name="setupInstructions"
               placeholder="環境変数の作成、Migration、起動までを順番に記載してください。"
@@ -597,7 +681,8 @@ export function ProjectForm() {
           </label>
           <label>
             <span>依存関係・互換性の注意</span>
-            <textarea
+            <CountedTextarea
+              maxLength={3000}
               minLength={10}
               name="dependencyNotes"
               placeholder="Version固定の理由、衝突しやすいModule、OS固有の制約を記載してください。"
@@ -617,7 +702,7 @@ export function ProjectForm() {
           </div>
           <label>
             <span>公開GitHub Repository URL</span>
-            <input
+            <CountedInput
               name="repositoryUrl"
               placeholder="https://github.com/owner/repository"
               required
@@ -627,7 +712,8 @@ export function ProjectForm() {
           <div className="two-column-fields">
             <label>
               <span>ライセンス</span>
-              <input
+              <CountedInput
+                maxLength={80}
                 name="licenseIdentifier"
                 placeholder="MIT / Apache-2.0"
                 required
@@ -636,7 +722,13 @@ export function ProjectForm() {
           </div>
           <label>
             <span>学習・改変・成果公開の利用条件</span>
-            <textarea minLength={20} name="usageTerms" required rows={5} />
+            <CountedTextarea
+              maxLength={2000}
+              minLength={20}
+              name="usageTerms"
+              required
+              rows={5}
+            />
           </label>
           <label className="check-row">
             <input name="rightsConfirmed" required type="checkbox" />

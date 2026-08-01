@@ -1400,6 +1400,80 @@ textarea {
   resize: vertical;
 }
 
+.character-count {
+  align-self: flex-end;
+  color: var(--text-subtle);
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.character-count.is-near-limit {
+  color: #9a6700;
+}
+
+.character-count.is-over-limit {
+  color: var(--danger, #cf222e);
+  font-weight: 700;
+}
+
+.guided-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.guided-field-heading {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.guided-field-heading label {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.field-guidance {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.field-example {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.field-example summary {
+  cursor: pointer;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.field-example pre {
+  background: var(--surface-subtle, #f6f8fa);
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: inherit;
+  line-height: 1.7;
+  margin: 9px 0 0;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  white-space: pre-wrap;
+}
+
+.search-combobox > .character-count {
+  margin-top: 7px;
+}
+
 .search-field {
   position: relative;
 }
